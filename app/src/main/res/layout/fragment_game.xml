@@ -1,0 +1,241 @@
+<com.lgsdiamond.theblackjack.BjTableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/loGameTable"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/background_light"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.lgsdiamond.theblackjack.GameFrag">
+
+    <com.lgsdiamond.theblackjack.BjDealerLayout
+        android:id="@+id/layoutDealer"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@drawable/dealer_seat"
+        android:clipChildren="false"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <com.lgsdiamond.theblackjack.BjDealerHandLayout
+            android:id="@+id/layoutDealerHand"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="65dp"
+            android:layout_marginTop="8dp"
+            android:clipChildren="false"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.lgsdiamond.theblackjack.BjCardView
+                android:id="@+id/dealer_card_01"
+                style="@style/playerCardImage"
+                android:layout_marginStart="0dp" />
+
+            <com.lgsdiamond.theblackjack.BjCardView
+                android:id="@+id/dealer_card_02"
+                style="@style/playerCardImage"
+                android:layout_marginStart="20dp" />
+
+            <com.lgsdiamond.theblackjack.BjCardView
+                android:id="@+id/dealer_card_03"
+                style="@style/playerCardImage"
+                android:layout_marginStart="40dp" />
+
+            <com.lgsdiamond.theblackjack.BjCardView
+                android:id="@+id/dealer_card_04"
+                style="@style/playerCardImage"
+                android:layout_marginStart="60dp" />
+
+            <com.lgsdiamond.theblackjack.BjCardView
+                android:id="@+id/dealer_card_05"
+                style="@style/playerCardImage"
+                android:layout_marginStart="80dp" />
+
+            <com.lgsdiamond.theblackjack.BjCardView
+                android:id="@+id/dealer_card_06"
+                style="@style/playerCardImage"
+                android:layout_marginStart="100dp" />
+
+            <com.lgsdiamond.theblackjack.BjCardView
+                android:id="@+id/dealer_card_07"
+                style="@style/playerCardImage"
+                android:layout_marginStart="120dp" />
+
+            <com.lgsdiamond.theblackjack.BjCardView
+                android:id="@+id/dealer_card_08"
+                style="@style/playerCardImage"
+                android:layout_marginStart="140dp" />
+
+            <com.lgsdiamond.theblackjack.BjCardView
+                android:id="@+id/dealer_card_09"
+                style="@style/playerCardImage"
+                android:layout_marginStart="160dp" />
+
+            <com.lgsdiamond.theblackjack.BjCardView
+                android:id="@+id/dealer_card_10"
+                style="@style/playerCardImage"
+                android:layout_marginStart="180dp" />
+
+            <com.lgsdiamond.theblackjack.BjCardView
+                android:id="@+id/dealer_card_11"
+                style="@style/playerCardImage"
+                android:layout_marginStart="200dp" />
+
+            <com.lgsdiamond.theblackjack.BjCardView
+                android:id="@+id/dealer_card_12"
+                style="@style/playerCardImage"
+                android:layout_marginStart="220dp" />
+
+            <com.lgsdiamond.theblackjack.BjCardView
+                android:id="@+id/dealer_card_13"
+                style="@style/playerCardImage"
+                android:layout_marginStart="240dp" />
+
+        </com.lgsdiamond.theblackjack.BjDealerHandLayout>
+
+        <com.lgsdiamond.theblackjack.BjTextView
+            android:id="@+id/txtDealerScore"
+            style="@style/playerHandListText"
+            android:layout_marginStart="8dp"
+            android:text="handScore"
+            android:textAlignment="textEnd"
+            app:layout_constraintBottom_toBottomOf="@id/layoutDealerHand"
+            app:layout_constraintStart_toEndOf="@id/layoutDealerHand" />
+
+        <com.lgsdiamond.theblackjack.BjTextView
+            android:id="@+id/txtDealerName"
+            style="@style/playerHandListText"
+            android:layout_marginEnd="8dp"
+            android:text="Dealer"
+            android:textAlignment="textEnd"
+            app:layout_constraintBottom_toBottomOf="@id/layoutDealerHand"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <com.lgsdiamond.theblackjack.BjImageButton
+            android:id="@+id/btnContinue"
+            style="@style/imageButtonStyle"
+            android:src="@drawable/ic_continue_round"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/layoutDealerHand"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.5" />
+
+        <ProgressBar
+            android:id="@+id/shoeProgress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="50dp"
+            android:layout_height="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginTop="3dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </com.lgsdiamond.theblackjack.BjDealerLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/player_hand_recyclerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="2dp"
+        android:layout_marginTop="2dp"
+        android:background="@drawable/back_gradient"
+        android:scrollbars="vertical"
+        app:layout_constraintBottom_toTopOf="@id/layoutActions"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layoutDealer"
+        tools:layout_editor_absoluteY="100dp"
+        tools:listitem="@layout/player_hand_list" />
+
+    <com.lgsdiamond.theblackjack.BjActionsLayout
+        android:id="@+id/layoutActions"
+        android:layout_width="0dp"
+        android:layout_height="80dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/txtProgress"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <com.lgsdiamond.theblackjack.BjButton
+            android:id="@+id/btnPlaySurrender"
+            style="@style/transButton"
+            android:layout_width="30dp"
+            android:layout_height="80dp"
+            android:layout_weight="1.5"
+            android:drawableTop="@drawable/ic_play_surrender"
+            android:padding="6dp"
+            android:text="Surrender" />
+
+        <LinearLayout
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="4.0"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_weight="1.0"
+                android:orientation="horizontal">
+
+                <com.lgsdiamond.theblackjack.BjButton
+                    android:id="@+id/btnPlayStand"
+                    style="@style/actionButton_H"
+                    android:drawableStart="@drawable/ic_play_stand"
+                    android:text="Stand" />
+
+                <com.lgsdiamond.theblackjack.BjButton
+                    android:id="@+id/btnPlaySplit"
+                    style="@style/actionButton_H"
+                    android:drawableStart="@drawable/ic_play_split"
+                    android:text="Split" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_weight="1.0"
+                android:orientation="horizontal">
+
+                <com.lgsdiamond.theblackjack.BjButton
+                    android:id="@+id/btnPlayHit"
+                    style="@style/actionButton_H"
+                    android:drawableStart="@drawable/ic_play_hit"
+                    android:text="Hit" />
+
+                <com.lgsdiamond.theblackjack.BjButton
+                    android:id="@+id/btnPlayDoubleDown"
+                    style="@style/actionButton_H"
+                    android:layout_weight="1.0"
+                    android:drawableStart="@drawable/ic_play_double"
+                    android:text="Double" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </com.lgsdiamond.theblackjack.BjActionsLayout>
+
+    <com.lgsdiamond.theblackjack.BjTextView
+        android:id="@+id/txtProgress"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/border_line_dark"
+        android:text="Progress"
+        android:textColor="@android:color/holo_green_dark"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</com.lgsdiamond.theblackjack.BjTableLayout>
+

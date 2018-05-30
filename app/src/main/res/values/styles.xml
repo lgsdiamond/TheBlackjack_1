@@ -1,0 +1,100 @@
+<resources xmlns:android="http://schemas.android.com/tools">
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <!-- The launcher theme. It sets the main window background to the launch_screen drawable -->
+    <style name="AppTheme.Launcher">
+        <item name="android:windowBackground">@drawable/launch_screen</item>
+        <!-- Optional, on Android 5+ you can modify the colorPrimaryDark color to match the windowBackground color for further branding-->
+        <!-- <item name="colorPrimaryDark">@android:color/white</item> -->
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="transButton" parent="ThemeOverlay.AppCompat">
+        <item name="android:layout_width">60dp</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:background">@drawable/button_select</item>
+    </style>
+
+    <style name="actionButton_H" parent="ThemeOverlay.AppCompat">
+        <item name="android:layout_width">60dp</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:background">@drawable/button_select</item>
+        <item name="android:layout_weight">1.0</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:gravity">center|center</item>
+    </style>
+
+    <!--<style name="transButton">-->
+    <!--<item name="android:layout_width">40dp</item>-->
+    <!--<item name="android:layout_height">40dp</item>-->
+    <!--<item name="android:background">@drawable/button_select</item>-->
+    <!--</style>-->
+
+    <style name="imageButtonStyle">
+        <item name="android:layout_width">40dp</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:scaleType">centerCrop</item>
+        <item name="android:background">@drawable/button_select</item>
+    </style>
+
+    <style name="boxButton">
+        <item name="android:layout_marginLeft">5dp</item>
+        <item name="android:layout_marginRight">5dp</item>
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="playerCardImage">
+        <item name="android:layout_width">64dp</item>
+        <item name="android:layout_height">87dp</item>
+        <item name="android:background">@drawable/white_face_card</item>
+    </style>
+
+    <style name="dealerCardImage">
+        <item name="android:layout_width">@dimen/cardWidth</item>
+        <item name="android:layout_height">@dimen/cardHeight</item>
+        <item name="android:layout_marginStart">@dimen/cardWidth</item>
+        <item name="android:layout_marginTop">@dimen/cardHeightGap</item>
+    </style>
+
+    <style name="tableStatusText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="playerHandListText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textColor">@color/colorAccent</item>
+    </style>
+
+    <!-- Preferences -->
+
+    <style name="switch_appearance" parent="@android:style/TextAppearance.Small">
+        <item name="android:textColor">#000032</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="spinner_appearance" parent="@style/Animation.AppCompat.DropDownUp">
+        <item name="android:textColor">#000032</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+</resources>

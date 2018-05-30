@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/loPrefSwitchRow"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="5dp"
+    android:layout_marginTop="5dp"
+    tools:context=".PreferenceFrag">
+
+    <include
+        android:id="@+id/include_in_switch"
+        layout="@layout/row_pref"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.lgsdiamond.theblackjack.BjSwitch
+        android:id="@+id/switchPrefRow"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:checked="false"
+        android:minWidth="200dp"
+        android:showText="true"
+        android:singleLine="true"
+        android:switchTextAppearance="@style/switch_appearance"
+        app:layout_constraintStart_toStartOf="@id/include_in_switch"
+        app:layout_constraintTop_toBottomOf="@id/include_in_switch" />
+
+</android.support.constraint.ConstraintLayout>

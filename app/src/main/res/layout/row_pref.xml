@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/loPrefRow"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context=".PreferenceFrag">
+
+    <com.lgsdiamond.theblackjack.BjTextView
+        android:id="@+id/tvPrefRowSectionTitle"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#005050"
+        android:paddingBottom="2dp"
+        android:paddingEnd="5dp"
+        android:paddingStart="5dp"
+        android:paddingTop="5dp"
+        android:text="section title"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="#ffffff"
+        android:textSize="14sp" />
+
+    <com.lgsdiamond.theblackjack.BjTextView
+        android:id="@+id/tvPrefRowTitle"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="3dp"
+        android:layout_marginTop="2dp"
+        android:text="OptionName"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="#000000"
+        android:textSize="16sp" />
+
+    <com.lgsdiamond.theblackjack.BjTextView
+        android:id="@+id/tvPrefRowDescription"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="0dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="2dp"
+        android:text="description"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="#3c3c3c"
+        android:textSize="14sp" />
+</LinearLayout>

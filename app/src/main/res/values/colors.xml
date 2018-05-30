@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <!-- imported for table -->
+
+    <color name="colorBlackjack">#783c78</color>
+    <color name="colorWin">#7878ff</color>
+    <color name="colorLost">#c83c78</color>
+    <color name="colorUnconfirmed">#78ff78</color>
+    <color name="colorConfirmed">#000000</color>
+
+    <color name="playing_button_pressed">#66666666</color>
+    <color name="playing_button_normal">#b3cccccc</color>
+
+    <color name="betting_button_pressed">#66AAAA66</color>
+    <color name="betting_button_normal">#668888cc</color>
+
+    <color name="colorDealerNormal">#aaaa66</color>
+
+    <color name="colorPlayerNormal">#323232</color>
+    <color name="colorPlayerWin">#0000c8</color>
+    <color name="colorPlayerLost">#780050</color>
+    <color name="colorPlayerPush">#64ff64</color>
+
+    <color name="colorHandHighlight">#7878c8</color>
+
+    <color name="colorBestAction">#1414dc</color>
+    <color name="colorNormalAction">#000000</color>
+
+    <!-- for counting -->
+
+    <color name="colorLowCard">#d2d2d2</color>
+    <color name="colorMediumCard">#ffffff</color>
+    <color name="colorHighCard">#ebe6ff</color>
+    <color name="colorAceCard">#dcdcff</color>
+    <color name="colorMinus">#641414</color>
+    <color name="colorPlus">#141464</color>
+    <color name="colorGood">#006400</color>
+    <color name="colorBad">#c85050</color>
+
+    <color name="colorTitleButton">#ffffff</color>
+    <color name="colorReferenceButton">#ffffe6</color>
+
+    <!--button state colors-->
+    <color name="button_pressed">#30301010</color>
+    <color name="button_focused">#30808000</color>
+    <color name="button_disabled">#30303030</color>
+    <color name="button_normal">#FFD0FFD0</color>
+</resources>

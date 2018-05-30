@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_play"
+        android:icon="@drawable/ic_play"
+        android:title="Play Game" />
+    <item
+        android:id="@+id/nav_simulator"
+        android:icon="@drawable/ic_simulator"
+        android:title="Simulator" />
+    <item
+        android:id="@+id/nav_counting"
+        android:icon="@drawable/ic_counting"
+        android:title="Card Counting" />
+
+    <item
+        android:id="@+id/nav_strategy"
+        android:icon="@drawable/ic_strategy"
+        android:title="Strategy" />
+    <item
+        android:id="@+id/nav_betting"
+        android:icon="@drawable/ic_betting"
+        android:title="Betting System" />
+
+    <item android:title="Info...">
+        <menu>
+            <item
+                android:id="@+id/nav_learning"
+                android:icon="@drawable/ic_learning"
+                android:title="Learn Blackjack" />
+            <item
+                android:id="@+id/nav_statistics"
+                android:icon="@drawable/ic_statistics"
+                android:title="Blackjack Statistics" />
+        </menu>
+    </item>
+
+</menu>
