@@ -104,7 +104,7 @@
         style="@style/playerHandListText"
         android:layout_marginRight="3dp"
         android:text="insured"
-        android:textSize="@dimen/_12sp"
+        android:textSize="12sp"
         app:layout_constraintBottom_toTopOf="@id/txtBetAmount"
         app:layout_constraintEnd_toStartOf="@id/layoutPlayerHand" />
 
@@ -113,7 +113,7 @@
         style="@style/playerHandListText"
         android:layout_marginRight="3dp"
         android:text="bet"
-        android:textSize="@dimen/_12sp"
+        android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@id/layoutPlayerHand"
         app:layout_constraintEnd_toStartOf="@id/layoutPlayerHand" />
 
@@ -140,7 +140,7 @@
         style="@style/playerHandListText"
         android:layout_marginLeft="3dp"
         android:text="insurePaid"
-        android:textSize="@dimen/_12sp"
+        android:textSize="12sp"
         app:layout_constraintBottom_toTopOf="@id/txtWinAmount"
         app:layout_constraintStart_toEndOf="@id/layoutPlayerHand" />
 
@@ -150,7 +150,7 @@
         android:layout_marginLeft="3dp"
         android:text="winAmount"
         android:textAlignment="textStart"
-        android:textSize="@dimen/_12sp"
+        android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/layoutPlayerHand"
         app:layout_constraintStart_toEndOf="@id/layoutPlayerHand" />
 

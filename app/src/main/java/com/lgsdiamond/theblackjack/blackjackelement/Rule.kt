@@ -3,7 +3,7 @@ package com.lgsdiamond.theblackjack.blackjackelement
 /**
  * Created by LgsDi on 2018-03-10.
  */
-enum class CardDealRule { DEAL_ONCE, DEAL_LATER }   // card dealing order
+enum class CardDealRule { DEAL_ONCE, DEAL_LATE }   // card dealing order
 
 enum class DoubleDownRule { ANY_TWO, NINE_TEN_ELEVEN, TEN_ELEVEN }
 
@@ -43,7 +43,7 @@ data class GameRule(var surrenderAllowed: Boolean,
 
         val sEuropeanRule = GameRule(false,
                 1.5f, 3,
-                CardDealRule.DEAL_LATER, DoubleDownRule.ANY_TWO,
+                CardDealRule.DEAL_LATE, DoubleDownRule.ANY_TWO,
                 true,
                 false,
                 true,
@@ -74,12 +74,11 @@ data class GameRule(var surrenderAllowed: Boolean,
     }
 }
 
-data class TableRule(var dealerName: String, var numDecks: Int, var numBoxes: Int, var minBet: Float, var maxBet: Float,
+data class TableRule(var numDecks: Int, var numBoxes: Int, var minBet: Float, var maxBet: Float,
                      var initBalance: Float, var blackjackPayout: Float, var fixedRandom: Boolean,
                      var useSound: Boolean, var useAnimation: Boolean) {
     companion object {
-        val sDefaultTableRule = TableRule("Dealer", 8, 10,
-                10.0f, 1_000.0f,
+        val sDefaultTableRule = TableRule(8, 10, 10.0f, 1_000.0f,
                 10_000.0f, 1.5f, true,
                 true, true)
     }

@@ -1,4 +1,4 @@
-<com.lgsdiamond.theblackjack.BjGameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.lgsdiamond.theblackjack.BjTableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/loGameTable"
@@ -115,16 +115,10 @@
             app:layout_constraintBottom_toBottomOf="@id/layoutDealerHand"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <com.lgsdiamond.theblackjack.BjButton
+        <com.lgsdiamond.theblackjack.BjImageButton
             android:id="@+id/btnContinue"
-            style="@style/boxButton"
-            android:layout_width="50dp"
-            android:layout_height="70dp"
-            android:drawableTop="@drawable/ic_continue_round"
-            android:padding="0dp"
-            android:text="Continue"
-            android:textColor="@android:color/holo_blue_dark"
-            android:textSize="@dimen/_10sp"
+            style="@style/imageButtonStyle"
+            android:src="@drawable/ic_continue_round"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/layoutDealerHand"
             app:layout_constraintHorizontal_bias="0.5"
@@ -161,11 +155,12 @@
 
     <com.lgsdiamond.theblackjack.BjActionsLayout
         android:id="@+id/layoutActions"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:background="@drawable/back_gradient"
+        android:layout_width="0dp"
+        android:layout_height="80dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:orientation="horizontal"
-        android:padding="3dp"
         app:layout_constraintBottom_toTopOf="@+id/txtProgress"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -173,65 +168,53 @@
         <com.lgsdiamond.theblackjack.BjButton
             android:id="@+id/btnPlaySurrender"
             style="@style/transButton"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_margin="3dp"
+            android:layout_width="30dp"
+            android:layout_height="80dp"
             android:layout_weight="1.5"
             android:drawableTop="@drawable/ic_play_surrender"
             android:padding="6dp"
-            android:text="Surrender"
-            android:textSize="@dimen/action_button_textSize" />
+            android:text="Surrender" />
 
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
             android:layout_weight="4.0"
             android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="40dp"
                 android:layout_weight="1.0"
                 android:orientation="horizontal">
 
                 <com.lgsdiamond.theblackjack.BjButton
                     android:id="@+id/btnPlayStand"
                     style="@style/actionButton_H"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1.0"
                     android:drawableStart="@drawable/ic_play_stand"
                     android:text="Stand" />
 
                 <com.lgsdiamond.theblackjack.BjButton
                     android:id="@+id/btnPlaySplit"
                     style="@style/actionButton_H"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
                     android:drawableStart="@drawable/ic_play_split"
                     android:text="Split" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="40dp"
                 android:layout_weight="1.0"
                 android:orientation="horizontal">
 
                 <com.lgsdiamond.theblackjack.BjButton
                     android:id="@+id/btnPlayHit"
                     style="@style/actionButton_H"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1.0"
                     android:drawableStart="@drawable/ic_play_hit"
                     android:text="Hit" />
 
                 <com.lgsdiamond.theblackjack.BjButton
                     android:id="@+id/btnPlayDoubleDown"
                     style="@style/actionButton_H"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
                     android:layout_weight="1.0"
                     android:drawableStart="@drawable/ic_play_double"
                     android:text="Double" />
@@ -248,13 +231,11 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@drawable/border_line_dark"
-        android:padding="2dp"
         android:text="Progress"
         android:textColor="@android:color/holo_green_dark"
-        android:textSize="@dimen/_16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-</com.lgsdiamond.theblackjack.BjGameLayout>
+</com.lgsdiamond.theblackjack.BjTableLayout>
 

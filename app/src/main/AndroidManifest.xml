@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.lgsdiamond.theblackjack">
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -18,13 +17,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SettingsActivity"/>
 
         <service
             android:name=".blackjackelement.BjService"
             android:enabled="true"
-            android:exported="false">
-        </service>
+            android:exported="false"></service>
 
     </application>
 

@@ -27,15 +27,13 @@
     <style name="transButton" parent="ThemeOverlay.AppCompat">
         <item name="android:layout_width">60dp</item>
         <item name="android:layout_height">40dp</item>
-        <item name="android:background">@drawable/button_selector</item>
+        <item name="android:background">@drawable/button_select</item>
     </style>
 
     <style name="actionButton_H" parent="ThemeOverlay.AppCompat">
         <item name="android:layout_width">60dp</item>
-        <item name="android:layout_height">@dimen/action_button_height</item>
-        <item name="android:textSize">@dimen/action_button_textSize</item>
-        <item name="android:layout_margin">3dp</item>
-        <item name="android:background">@drawable/button_selector</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:background">@drawable/button_select</item>
         <item name="android:layout_weight">1.0</item>
         <item name="android:padding">10dp</item>
         <item name="android:gravity">center|center</item>
@@ -51,13 +49,13 @@
         <item name="android:layout_width">40dp</item>
         <item name="android:layout_height">40dp</item>
         <item name="android:scaleType">centerCrop</item>
-        <item name="android:background">@drawable/button_selector</item>
+        <item name="android:background">@drawable/button_select</item>
     </style>
 
     <style name="boxButton">
         <item name="android:layout_marginLeft">5dp</item>
         <item name="android:layout_marginRight">5dp</item>
-        <item name="android:background">@drawable/button_selector</item>
+        <item name="android:background">@color/colorPrimary</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
@@ -84,7 +82,6 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAlignment">center</item>
-        <item name="android:textSize">@dimen/_16sp</item>
         <item name="android:textColor">@color/colorAccent</item>
     </style>
 

@@ -43,6 +43,8 @@ class SettingFrag : PreferenceFragment() {
         if (arguments != null) {
             barTitle = arguments.getString(BAR_TITLE)
         }
+
+        addPreferencesFromResource(R.xml.preferences)
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {

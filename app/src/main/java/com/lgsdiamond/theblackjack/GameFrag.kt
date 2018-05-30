@@ -132,16 +132,15 @@ class GameFrag : BjFragment() {
                             btnPlayStand    // default
                         }
                     }
-
-                    btnPlaySplit.isEnabled = pHand.canSplit
-                    btnPlayDoubleDown.isEnabled = pHand.canDoubleDown
-                    btnPlaySurrender.visibility = if (pHand.canSurrender) View.VISIBLE else View.GONE
-
                     proposedButton.showProposed()
                     showProgressMsg("[$action] is proposed.")
 
                     // TODO: Test
-                    if (pHand.player != Player.playerSelf) proposedButton.autoDelayedClick()
+//                    proposedButton.performClick()
+
+                    btnPlaySplit.isEnabled = pHand.canSplit
+                    btnPlayDoubleDown.isEnabled = pHand.canDoubleDown
+                    btnPlaySurrender.visibility = if (pHand.canSurrender) View.VISIBLE else View.GONE
 
                     notifyDelayUI()
                 }
@@ -204,7 +203,7 @@ class GameFrag : BjFragment() {
             Stage.BETTING -> {
                 showProgressMsg("SOUND: Place Bet Please!")
 
-                showContinueButton(true, "Start\nDeal")
+                showContinueButton(true)
 
                 scrollUpdateHandView(0)
 
@@ -220,7 +219,7 @@ class GameFrag : BjFragment() {
 
             Stage.OFFER_INSURANCE -> {
                 showProgressMsg("SOUND: any insurance?")
-                showContinueButton(true, "Ins.\nDone")
+                btnContinue.visibility = View.VISIBLE
 
                 handAdapter.offeringInsurance = true
 
@@ -289,7 +288,7 @@ class GameFrag : BjFragment() {
             Stage.PAY_HANDS -> {
                 scrollUpdateHandView(0)
 
-                showContinueButton(true, "New\nRound")
+                showContinueButton(true)
                 notifyDealerHandChanged()
 
                 notifyDelayUI()
@@ -405,32 +404,31 @@ class GameFrag : BjFragment() {
 
     //====
     override fun initFragmentUI(view: View) {
-        normalizeActionButtons()
         btnContinue.setOnClickListener({ _: View ->
             continueRound()
         })
 
-        btnPlaySurrender.setOnClickListener({ _: View ->
+        btnPlaySurrender.setOnClickListener({ v: View ->
             normalizeActionButtons()
             startService(ServiceAction.ACTION_SURRENDER)
         })
 
-        btnPlayStand.setOnClickListener({ _: View ->
+        btnPlayStand.setOnClickListener({ v: View ->
             normalizeActionButtons()
             startService(ServiceAction.ACTION_STAND)
         })
 
-        btnPlayHit.setOnClickListener({ _: View ->
+        btnPlayHit.setOnClickListener({ v: View ->
             normalizeActionButtons()
             startService(ServiceAction.ACTION_HIT)
         })
 
-        btnPlaySplit.setOnClickListener({ _: View ->
+        btnPlaySplit.setOnClickListener({ v: View ->
             normalizeActionButtons()
             startService(ServiceAction.ACTION_SPLIT)
         })
 
-        btnPlayDoubleDown.setOnClickListener({ _: View ->
+        btnPlayDoubleDown.setOnClickListener({ v: View ->
             normalizeActionButtons()
             startService(ServiceAction.ACTION_DOUBLEDOWN)
         })
@@ -450,7 +448,7 @@ class GameFrag : BjFragment() {
         handAdapter = HandAdapter(table.dealer.playerHands)
         player_hand_recyclerView.adapter = handAdapter
 
-        handLayoutManager = HandLayoutManager(gMainActivity)
+        handLayoutManager = HandLayoutManager(context!!)
         player_hand_recyclerView.layoutManager = handLayoutManager
     }
 
@@ -938,13 +936,11 @@ class GameFrag : BjFragment() {
         }
     }
 
-    fun showContinueButton(toShow: Boolean, label: String = "") {
-        if (toShow) {
+    fun showContinueButton(toShow: Boolean) {
+        if (toShow)
             btnContinue.visibility = View.VISIBLE
-            btnContinue.text = label
-        } else {
+        else
             btnContinue.visibility = View.GONE
-        }
     }
 
     fun getImageId(imageName: String): Int {

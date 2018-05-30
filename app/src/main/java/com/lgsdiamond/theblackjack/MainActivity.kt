@@ -1,8 +1,8 @@
 package com.lgsdiamond.theblackjack
 
 import android.app.AlertDialog
+import android.app.Fragment
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.ActivityInfo
 import android.graphics.Color
@@ -47,16 +47,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     val defPreferences: SharedPreferences by lazy { getSharedPreferences(PREF_NAME, 0) }
 
-    private var currentFrag: BjFragment? = null
+    private var currentFrag: Fragment? = null
 
-    private val bettingFrag = BettingFrag.newInstance("Betting Strategy")
-    private val countingFrag = CountingFrag.newInstance("Card Counting")
-    private val learningFrag = LearningFrag.newInstance("Learning Blackjack")
-    private val gameFrag = GameFrag.newInstance("Blackjack Table")
-    private val preferenceFrag = PreferenceFrag.newInstance("Preferences")
-    private val simulationFrag = SimulationFrag.newInstance("Simulation")
-    private val statisticsFrag = StatisticsFrag.newInstance("Statistics")
-    private val strategyFrag = StrategyFrag.newInstance("Strategy")
+    val bettingFrag = BettingFrag.newInstance("Betting Strategy")
+    val countingFrag = CountingFrag.newInstance("Card Counting")
+    val learningFrag = LearningFrag.newInstance("Learning Blackjack")
+    val gameFrag = GameFrag.newInstance("Blackjack Table")
+    val preferenceFrag = PreferenceFrag.newInstance("Preferences")
+    val simulationFrag = SimulationFrag.newInstance("Simulation")
+    val statisticsFrag = StatisticsFrag.newInstance("Statistics")
+    val strategyFrag = StrategyFrag.newInstance("Strategy")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -102,9 +102,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
             drawer_layout.closeDrawer(GravityCompat.START)
         } else {
-            val count = fragmentManager.backStackEntryCount
+            val count = supportFragmentManager.backStackEntryCount
             if (count > 0) {
-                fragmentManager.popBackStack()
+                supportFragmentManager.popBackStack()
             } else {
                 finishApp(true)
             }
@@ -113,20 +113,20 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onResumeFragments() {
         super.onResumeFragments()
-        "onResumeFragments".toToastShort()
+        "onResumeFragments".toToastShort()      // TODO-testing
     }
 
     override fun onPause() {
         super.onPause()
-        "onPause".toToastShort()
+        "onPause".toToastShort()                // TODO-testing
     }
 
     private fun finishApp(toAsk: Boolean) {
         if (toAsk) {
             val builder = AlertDialog.Builder(this)
-                    .setTitle("Exit TheBlackjack".spanTitleFace())
+                    .setTitle("Exit TheBlackjack")
                     .setMessage("Do you want to exit TheBlackjack?")
-                    .setPositiveButton("Yes") { _, _ ->
+                    .setPositiveButton("Yes") { dlg, value ->
                         moveTaskToBack(true)
                         finish()
                         android.os.Process.killProcess(android.os.Process.myPid())
@@ -172,8 +172,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 return true
             }
             R.id.action_about -> {
-                runSettingActivity()
-//                showAbout() // TODO-
+                showAbout()
                 return true
             }
             R.id.action_finish -> {
@@ -190,7 +189,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // empty body
     }
 
-    override fun onListFragmentInteraction(item: PreferenceFrag.BjPref) {
+    override fun onListFragmentInteraction(item: PrefFactory.BjPref) {
         // empty body
     }
 
@@ -230,32 +229,52 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val winManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
         winManager.defaultDisplay.getMetrics(sMetrics)
 
-        btnTest.setOnClickListener({ _: View ->
-            runTest()
+        btnTest.setOnClickListener({ v: View ->
+            runTest(v)
         })
 
-        btnStart.setOnClickListener({ _: View ->
-            startGame()
+        btnStart.setOnClickListener({ v: View ->
+            startGame(v)
         })
     }
 
     private fun initFragments() {
     }
 
-    private fun switchFragment(frag: BjFragment) {
+    private fun switchFragment(frag: Fragment) {
         if (frag == currentFrag) return
 
-        val transaction = fragmentManager.beginTransaction()
+        val tag = when (frag) {
+            preferenceFrag -> (frag as PreferenceFrag).barTitle
+            is BjFragment -> frag.barTitle
+            else -> ""
+        }
 
-        // add backStack for valid frag
-        if ((currentFrag != null) && (currentFrag != preferenceFrag))
-            transaction.addToBackStack(currentFrag?.barTitle)
+        when (currentFrag) {
+            null, preferenceFrag -> {
+                fragmentManager.beginTransaction()
+                        .replace(R.id.loFragHolder, frag, tag)
+                        .show(frag)
+                        .commit()
+            }
+            is BjFragment -> {
+                val currentBjFrag = currentFrag as BjFragment
+                fragmentManager.beginTransaction()
+                        .addToBackStack(currentBjFrag.barTitle)
+                        .replace(R.id.loFragHolder, frag, tag)
+                        .show(frag)
+                        .commit()
+            }
+            else -> {
+            }
+        }
 
-        transaction.replace(R.id.loFragHolder, frag, frag.barTitle)
-        transaction.show(frag)
-        transaction.commit()
+        if (frag is PreferenceFrag) {
+            frag.setActionBarTitle()
+        } else if (frag is BjFragment) {
+            frag.setActionBarTitle()
+        }
 
-        frag.setActionBarTitle()
         currentFrag = frag        // now it becomes current
     }
 
@@ -263,16 +282,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     }
 
-    private fun runSettingActivity() {
-        val intent = Intent(this, SettingsActivity::class.java)
-        startActivity(intent)
-    }
-
     //== TESTING ==
-    private fun runTest() {
+    private fun runTest(v: View) {
+
+        val done = true
     }
 
-    private fun startGame() {
+    private fun startGame(v: View) {
         switchFragment(gameFrag)
     }
 

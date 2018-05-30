@@ -19,12 +19,13 @@
 
     <com.lgsdiamond.theblackjack.BjSpinner
         android:id="@+id/spinnerPrefRow"
-        android:layout_width="170dp"
-        android:layout_height="20sp"
+        android:layout_width="160dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="3dp"
         android:layout_marginStart="20dp"
         android:popupBackground="#ffffff"
         android:spinnerMode="dropdown"
-        android:textAlignment="viewStart"
+        android:textAlignment="viewEnd"
         android:theme="@style/spinner_appearance"
         app:layout_constraintStart_toStartOf="@id/include_in_spinner"
         app:layout_constraintTop_toBottomOf="@id/include_in_spinner" />

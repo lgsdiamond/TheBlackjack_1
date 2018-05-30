@@ -5,7 +5,6 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Typeface
 import android.support.constraint.ConstraintLayout
-import android.support.v4.content.ContextCompat
 import android.support.v7.widget.*
 import android.text.Spannable
 import android.text.SpannableString
@@ -17,6 +16,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+
 
 class FontUtility {
     companion object {
@@ -93,32 +93,12 @@ class BjTextView : AppCompatTextView {
     }
 }
 
-class BjEditText : AppCompatEditText {
-
-    // constructor
-    constructor(context: Context) : super(context)
-
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
-
-    init {
-        typeface = FontUtility.contentFace
-    }
-}
-
-val colorBtnNormal: Int by lazy { ContextCompat.getColor(gMainActivity, R.color.button_normal) }
-val colorBtnDisabled: Int by lazy { ContextCompat.getColor(gMainActivity, R.color.button_disabled) }
-
 class BjButton : AppCompatButton {
 
     // constructor
     constructor(context: Context) : super(context)
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
-
-    override fun setEnabled(enabled: Boolean) {
-        super.setEnabled(enabled)
-        setTextColor(if (enabled) Color.BLACK else Color.DKGRAY)
-    }
 
     init {
         typeface = FontUtility.titleFace
@@ -133,10 +113,6 @@ class BjButton : AppCompatButton {
         setTextColor(Color.BLACK)
     }
 
-    fun autoDelayedClick() {
-        val delay = 1000L
-        postDelayed({ performClick() }, delay)
-    }
 }
 
 class BjImageButton : AppCompatImageButton {
@@ -200,6 +176,7 @@ class BjArrayAdapter<T>(context: Context, textViewResourceId: Int, data: Array<T
         val view = super.getView(position, convertView, parent)
         if (view is TextView) {
             view.typeface = FontUtility.titleFace
+            view.setBackgroundColor(Color.LTGRAY)
         }
         return view
     }
@@ -208,13 +185,14 @@ class BjArrayAdapter<T>(context: Context, textViewResourceId: Int, data: Array<T
         val view = super.getView(position, convertView, parent)
         if (view is TextView) {
             view.typeface = FontUtility.titleFace
+            view.setBackgroundColor(Color.LTGRAY)
         }
         return view
     }
 }
 
 // TableLayout
-class BjGameLayout : ConstraintLayout {
+class BjTableLayout : ConstraintLayout {
     // constructor
     constructor(context: Context) : super(context)
 

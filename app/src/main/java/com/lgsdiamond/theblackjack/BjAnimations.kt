@@ -85,7 +85,6 @@ class BjAnimUtility {
             anim.addAnimation(alpha)
             anim.duration = 500L
             anim.interpolator = DecelerateInterpolator()
-
             return anim
         }
     }

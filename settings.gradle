@@ -1,1 +1,1 @@
-include ':blackjack'
+include ':app'

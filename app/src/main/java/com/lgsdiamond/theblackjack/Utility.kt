@@ -1,9 +1,5 @@
 package com.lgsdiamond.theblackjack
 
-import android.graphics.Typeface
-import android.os.Looper
-import android.text.Spannable
-import android.text.SpannableString
 import android.widget.Toast
 import java.text.DecimalFormat
 import kotlin.math.ceil
@@ -11,7 +7,7 @@ import kotlin.math.floor
 
 
 /**
- * Extensions
+ * Created by LgsDi on 2018-03-10.
  */
 
 fun Float.toDollarString(): String {
@@ -35,26 +31,3 @@ fun Float.toAllinBet(): Float {     // $1 unit
 fun String.toToastShort() {
     Toast.makeText(gContext, this, Toast.LENGTH_SHORT).show()
 }
-
-fun CharSequence.spanTitleFace(): CharSequence {
-    return spanFace(FontUtility.titleFace)
-}
-
-fun CharSequence.spanContentFace(): CharSequence {
-    return spanFace(FontUtility.contentFace)
-}
-
-fun CharSequence.spanFace(face: Typeface): CharSequence {
-    val span = SpannableString(this)
-    span.setSpan(CustomTypefaceSpan("", face), 0, this.length,
-            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-
-    return span
-}
-
-/**
- * Thread
- */
-fun Thread.isMainThread() = (Looper.myLooper() == Looper.getMainLooper())
-
-
