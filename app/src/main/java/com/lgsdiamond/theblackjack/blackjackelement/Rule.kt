@@ -74,11 +74,12 @@ data class GameRule(var surrenderAllowed: Boolean,
     }
 }
 
-data class TableRule(var numDecks: Int, var numBoxes: Int, var minBet: Float, var maxBet: Float,
+data class TableRule(var dealerName: String, var numDecks: Int, var numBoxes: Int, var minBet: Float, var maxBet: Float,
                      var initBalance: Float, var blackjackPayout: Float, var fixedRandom: Boolean,
                      var useSound: Boolean, var useAnimation: Boolean) {
     companion object {
-        val sDefaultTableRule = TableRule(8, 10, 10.0f, 1_000.0f,
+        val sDefaultTableRule = TableRule("Dealer", 8, 10,
+                10.0f, 1_000.0f,
                 10_000.0f, 1.5f, true,
                 true, true)
     }

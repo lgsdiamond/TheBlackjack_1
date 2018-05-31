@@ -23,22 +23,22 @@
             android:text="Blackjack Rules &amp; Table Setting"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <ImageView
-            android:id="@+id/ivSettingCancel"
+        <com.lgsdiamond.theblackjack.BjImageButton
+            android:id="@+id/btnSettingCancel"
+            style="@style/imageButtonStyle"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_alignParentStart="true"
             android:src="@drawable/ic_back" />
 
-        <ImageView
-            android:id="@+id/ivSettingAccept"
+        <com.lgsdiamond.theblackjack.BjImageButton
+            android:id="@+id/btnSettingAccept"
+            style="@style/imageButtonStyle"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_alignParentEnd="true"
-            android:layout_toStartOf="@id/ivSettingAccept"
+            android:layout_toStartOf="@id/btnSettingAccept"
             android:src="@drawable/ic_accept" />
-
-
     </RelativeLayout>
 
     <com.lgsdiamond.theblackjack.BjTextView
@@ -55,16 +55,16 @@
     <com.lgsdiamond.theblackjack.BjPrefRecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/prefRecycleView"
+        android:id="@+id/prefCategoryRecycleView"
         android:name="com.lgsdiamond.hbmembers.CompanyFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="right"
         android:layout_marginLeft="0dp"
         android:layout_marginRight="0dp"
-        android:background="@android:color/background_light"
+        android:background="@android:color/transparent"
         app:layoutManager="android.support.v7.widget.LinearLayoutManager"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:context="com.lgsdiamond.theblackjack.MainActivity"
-        tools:listitem="@layout/row_pref" />
+        tools:listitem="@layout/row_pref_category" />
 </LinearLayout>

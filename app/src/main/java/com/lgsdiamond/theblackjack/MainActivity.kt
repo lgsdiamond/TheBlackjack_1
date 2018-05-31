@@ -1,7 +1,6 @@
 package com.lgsdiamond.theblackjack
 
 import android.app.AlertDialog
-import android.app.Fragment
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.pm.ActivityInfo
@@ -47,7 +46,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     val defPreferences: SharedPreferences by lazy { getSharedPreferences(PREF_NAME, 0) }
 
-    private var currentFrag: Fragment? = null
+    private var currentFrag: BjFragment? = null
 
     val bettingFrag = BettingFrag.newInstance("Betting Strategy")
     val countingFrag = CountingFrag.newInstance("Card Counting")
@@ -102,9 +101,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
             drawer_layout.closeDrawer(GravityCompat.START)
         } else {
-            val count = supportFragmentManager.backStackEntryCount
+            val count = fragmentManager.backStackEntryCount
             if (count > 0) {
-                supportFragmentManager.popBackStack()
+                fragmentManager.popBackStack()
             } else {
                 finishApp(true)
             }
@@ -241,41 +240,37 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private fun initFragments() {
     }
 
-    private fun switchFragment(frag: Fragment) {
+    private fun switchFragment(frag: BjFragment) {
         if (frag == currentFrag) return
 
-        val tag = when (frag) {
-            preferenceFrag -> (frag as PreferenceFrag).barTitle
-            is BjFragment -> frag.barTitle
-            else -> ""
-        }
+        fragmentManager.beginTransaction()
+                .addToBackStack(currentFrag?.barTitle)
+                .replace(R.id.loFragHolder, frag, frag.barTitle)
+                .show(frag)
+                .commit()
+
+        frag.setActionBarTitle()
+        currentFrag = frag        // now it becomes current
+
+        return
 
         when (currentFrag) {
-            null, preferenceFrag -> {
+            gameFrag, preferenceFrag -> {
                 fragmentManager.beginTransaction()
-                        .replace(R.id.loFragHolder, frag, tag)
+                        .replace(R.id.loFragHolder, frag, frag.barTitle)
                         .show(frag)
                         .commit()
             }
-            is BjFragment -> {
-                val currentBjFrag = currentFrag as BjFragment
+            null, is BjFragment -> {
                 fragmentManager.beginTransaction()
-                        .addToBackStack(currentBjFrag.barTitle)
-                        .replace(R.id.loFragHolder, frag, tag)
+                        .addToBackStack(currentFrag?.barTitle)
+                        .replace(R.id.loFragHolder, frag, frag.barTitle)
                         .show(frag)
                         .commit()
             }
             else -> {
             }
         }
-
-        if (frag is PreferenceFrag) {
-            frag.setActionBarTitle()
-        } else if (frag is BjFragment) {
-            frag.setActionBarTitle()
-        }
-
-        currentFrag = frag        // now it becomes current
     }
 
     private fun showAbout() {

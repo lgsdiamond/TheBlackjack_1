@@ -2,31 +2,30 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/loPrefSpinnerRow"
+    android:id="@+id/loPrefTextRow"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="5dp"
     android:layout_marginTop="5dp"
-    tools:context=".MainActivity">
+    tools:context=".PreferenceFrag">
 
     <include
-        android:id="@+id/include_in_spinner"
+        android:id="@+id/include_in_text"
         layout="@layout/row_pref"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.lgsdiamond.theblackjack.BjSpinner
-        android:id="@+id/spinnerPrefRow"
-        android:layout_width="170dp"
-        android:layout_height="20sp"
+    <com.lgsdiamond.theblackjack.BjEditText
+        android:id="@+id/textPrefRow"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:popupBackground="#ffffff"
-        android:spinnerMode="dropdown"
-        android:textAlignment="viewStart"
-        android:theme="@style/spinner_appearance"
-        app:layout_constraintStart_toStartOf="@id/include_in_spinner"
-        app:layout_constraintTop_toBottomOf="@id/include_in_spinner" />
+        android:inputType="text"
+        android:singleLine="true"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="@id/include_in_text"
+        app:layout_constraintTop_toBottomOf="@id/include_in_text" />
 
 </android.support.constraint.ConstraintLayout>

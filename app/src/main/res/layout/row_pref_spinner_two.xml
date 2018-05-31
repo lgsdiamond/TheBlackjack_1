@@ -15,7 +15,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/tvPrefRowSectionTitle"
+        android:layout_below="@+id/tvPrefRowCategoryTitle"
         android:layout_toStartOf="@+id/switchPrefRow" />
 
     <com.lgsdiamond.theblackjack.BjSpinner
