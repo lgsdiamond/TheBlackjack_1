@@ -93,6 +93,18 @@ class BjTextView : AppCompatTextView {
     }
 }
 
+class BjEditText : AppCompatEditText {
+
+    // constructor
+    constructor(context: Context) : super(context)
+
+    constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
+
+    init {
+        typeface = FontUtility.contentFace
+    }
+}
+
 class BjButton : AppCompatButton {
 
     // constructor
@@ -176,7 +188,6 @@ class BjArrayAdapter<T>(context: Context, textViewResourceId: Int, data: Array<T
         val view = super.getView(position, convertView, parent)
         if (view is TextView) {
             view.typeface = FontUtility.titleFace
-            view.setBackgroundColor(Color.LTGRAY)
         }
         return view
     }
@@ -185,14 +196,13 @@ class BjArrayAdapter<T>(context: Context, textViewResourceId: Int, data: Array<T
         val view = super.getView(position, convertView, parent)
         if (view is TextView) {
             view.typeface = FontUtility.titleFace
-            view.setBackgroundColor(Color.LTGRAY)
         }
         return view
     }
 }
 
 // TableLayout
-class BjTableLayout : ConstraintLayout {
+class BjGameLayout : ConstraintLayout {
     // constructor
     constructor(context: Context) : super(context)
 
