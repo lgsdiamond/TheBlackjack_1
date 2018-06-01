@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Typeface
 import android.support.constraint.ConstraintLayout
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.*
 import android.text.Spannable
 import android.text.SpannableString
@@ -105,12 +106,21 @@ class BjEditText : AppCompatEditText {
     }
 }
 
+val colorBtnNormal: Int by lazy { ContextCompat.getColor(gMainActivity, R.color.button_normal) }
+val colorBtnDisabled: Int by lazy { ContextCompat.getColor(gMainActivity, R.color.button_disabled) }
+
 class BjButton : AppCompatButton {
 
     // constructor
     constructor(context: Context) : super(context)
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
+
+    override fun setEnabled(enabled: Boolean) {
+        super.setEnabled(enabled)
+        setTextColor(if (enabled) Color.BLACK else Color.DKGRAY)
+        setBackgroundColor(if (enabled) colorBtnNormal else colorBtnDisabled)
+    }
 
     init {
         typeface = FontUtility.titleFace
@@ -123,8 +133,13 @@ class BjButton : AppCompatButton {
 
     fun backToNormal() {
         setTextColor(Color.BLACK)
+        setBackgroundColor(colorBtnNormal)
     }
 
+    fun autoDelayedClick() {
+        val delay = 1000L
+        postDelayed( { performClick() }, delay)
+    }
 }
 
 class BjImageButton : AppCompatImageButton {
