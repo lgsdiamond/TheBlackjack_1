@@ -47,6 +47,6 @@
     <!--button state colors-->
     <color name="button_pressed">#30301010</color>
     <color name="button_focused">#30808000</color>
-    <color name="button_disabled">#30303030</color>
+    <color name="button_disabled">#FFA0C0A0</color>
     <color name="button_normal">#FFD0FFD0</color>
 </resources>

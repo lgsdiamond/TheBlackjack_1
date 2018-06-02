@@ -1,6 +1,7 @@
 package com.lgsdiamond.theblackjack
 
 import android.app.AlertDialog
+import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.pm.ActivityInfo

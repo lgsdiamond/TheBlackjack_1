@@ -301,6 +301,8 @@ class Dealer : Person("Dealer") {
     }
 
     fun payHands() {
+        currentHandIndex = NO_CURRENT_HAND
+        
         for ((handIndex, pHand) in playerHands.iterator().withIndex()) {
 
             // treat insured hands first

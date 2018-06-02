@@ -132,15 +132,16 @@ class GameFrag : BjFragment() {
                             btnPlayStand    // default
                         }
                     }
-                    proposedButton.showProposed()
-                    showProgressMsg("[$action] is proposed.")
-
-                    // TODO: Test
-//                    proposedButton.performClick()
 
                     btnPlaySplit.isEnabled = pHand.canSplit
                     btnPlayDoubleDown.isEnabled = pHand.canDoubleDown
                     btnPlaySurrender.visibility = if (pHand.canSurrender) View.VISIBLE else View.GONE
+
+                    proposedButton.showProposed()
+                    showProgressMsg("[$action] is proposed.")
+
+                    // TODO: Test
+                    if (pHand.player != Player.playerSelf) proposedButton.autoDelayedClick()
 
                     notifyDelayUI()
                 }
@@ -203,7 +204,7 @@ class GameFrag : BjFragment() {
             Stage.BETTING -> {
                 showProgressMsg("SOUND: Place Bet Please!")
 
-                showContinueButton(true)
+                showContinueButton(true, "Start\nDeal")
 
                 scrollUpdateHandView(0)
 
@@ -219,7 +220,7 @@ class GameFrag : BjFragment() {
 
             Stage.OFFER_INSURANCE -> {
                 showProgressMsg("SOUND: any insurance?")
-                btnContinue.visibility = View.VISIBLE
+                showContinueButton(true, "Ins.\nDone")
 
                 handAdapter.offeringInsurance = true
 
@@ -288,7 +289,7 @@ class GameFrag : BjFragment() {
             Stage.PAY_HANDS -> {
                 scrollUpdateHandView(0)
 
-                showContinueButton(true)
+                showContinueButton(true, "New\nRound")
                 notifyDealerHandChanged()
 
                 notifyDelayUI()
@@ -404,31 +405,32 @@ class GameFrag : BjFragment() {
 
     //====
     override fun initFragmentUI(view: View) {
+        normalizeActionButtons()
         btnContinue.setOnClickListener({ _: View ->
             continueRound()
         })
 
-        btnPlaySurrender.setOnClickListener({ v: View ->
+        btnPlaySurrender.setOnClickListener({ _: View ->
             normalizeActionButtons()
             startService(ServiceAction.ACTION_SURRENDER)
         })
 
-        btnPlayStand.setOnClickListener({ v: View ->
+        btnPlayStand.setOnClickListener({ _: View ->
             normalizeActionButtons()
             startService(ServiceAction.ACTION_STAND)
         })
 
-        btnPlayHit.setOnClickListener({ v: View ->
+        btnPlayHit.setOnClickListener({ _: View ->
             normalizeActionButtons()
             startService(ServiceAction.ACTION_HIT)
         })
 
-        btnPlaySplit.setOnClickListener({ v: View ->
+        btnPlaySplit.setOnClickListener({ _: View ->
             normalizeActionButtons()
             startService(ServiceAction.ACTION_SPLIT)
         })
 
-        btnPlayDoubleDown.setOnClickListener({ v: View ->
+        btnPlayDoubleDown.setOnClickListener({ _: View ->
             normalizeActionButtons()
             startService(ServiceAction.ACTION_DOUBLEDOWN)
         })
@@ -936,11 +938,13 @@ class GameFrag : BjFragment() {
         }
     }
 
-    fun showContinueButton(toShow: Boolean) {
-        if (toShow)
+    fun showContinueButton(toShow: Boolean, label: String = "") {
+        if (toShow) {
             btnContinue.visibility = View.VISIBLE
-        else
+            btnContinue.text = label
+        } else {
             btnContinue.visibility = View.GONE
+        }
     }
 
     fun getImageId(imageName: String): Int {

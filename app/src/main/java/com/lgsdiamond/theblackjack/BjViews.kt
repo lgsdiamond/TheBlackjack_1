@@ -119,7 +119,6 @@ class BjButton : AppCompatButton {
     override fun setEnabled(enabled: Boolean) {
         super.setEnabled(enabled)
         setTextColor(if (enabled) Color.BLACK else Color.DKGRAY)
-        setBackgroundColor(if (enabled) colorBtnNormal else colorBtnDisabled)
     }
 
     init {
@@ -133,12 +132,11 @@ class BjButton : AppCompatButton {
 
     fun backToNormal() {
         setTextColor(Color.BLACK)
-        setBackgroundColor(colorBtnNormal)
     }
 
     fun autoDelayedClick() {
         val delay = 1000L
-        postDelayed( { performClick() }, delay)
+        postDelayed({ performClick() }, delay)
     }
 }
 
