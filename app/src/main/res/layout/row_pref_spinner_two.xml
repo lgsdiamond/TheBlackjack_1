@@ -18,16 +18,29 @@
         android:layout_below="@+id/tvPrefRowCategoryTitle"
         android:layout_toStartOf="@+id/switchPrefRow" />
 
+    <com.lgsdiamond.theblackjack.BjTextView
+        android:id="@+id/tvPrefRowDescription2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="0dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="2dp"
+        android:text="description"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="#3c3c3c"
+        android:textSize="14sp"
+        app:layout_constraintTop_toBottomOf="@id/include_in_spinner_two" />
+
     <com.lgsdiamond.theblackjack.BjSpinner
         android:id="@+id/spinnerTwoPrefRow"
         android:layout_width="160dp"
         android:layout_height="30dp"
         android:layout_alignParentEnd="true"
-        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
         android:popupBackground="#ffffff"
         android:spinnerMode="dropdown"
         android:textAlignment="viewEnd"
         android:theme="@style/spinner_appearance"
-        app:layout_constraintEnd_toEndOf="@id/include_in_spinner_two"
-        app:layout_constraintTop_toBottomOf="@id/include_in_spinner_two" />
+        app:layout_constraintStart_toStartOf="@id/include_in_spinner_two"
+        app:layout_constraintTop_toBottomOf="@id/tvPrefRowDescription2" />
 </android.support.constraint.ConstraintLayout>

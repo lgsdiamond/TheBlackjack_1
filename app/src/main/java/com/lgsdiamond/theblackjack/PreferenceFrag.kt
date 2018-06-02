@@ -22,6 +22,7 @@ import kotlinx.android.synthetic.main.content_preference.*
 import kotlinx.android.synthetic.main.row_pref.view.*
 import kotlinx.android.synthetic.main.row_pref_category.view.*
 import kotlinx.android.synthetic.main.row_pref_spinner.view.*
+import kotlinx.android.synthetic.main.row_pref_spinner_two.view.*
 import kotlinx.android.synthetic.main.row_pref_switch.view.*
 import kotlinx.android.synthetic.main.row_pref_text.view.*
 
@@ -29,156 +30,158 @@ import kotlinx.android.synthetic.main.row_pref_text.view.*
 class PrefFactory {
 
     // subclasses
-    abstract class BjPref(var title: String, var description: String) {
-        var mTouched = false
+    abstract class BjPref(val title: String) {
+        abstract val description: String
+        abstract val needUpdate: Boolean
 
-        abstract fun needUpdate(): Boolean
-        abstract fun settingRuleIn()
-        abstract fun settingRuleOut()
+        abstract fun commitChange()
+        abstract val prefString: String
 
-        fun setTouched(touched: Boolean) {
-            mTouched = touched
+        open fun bindView(holderView: View) {
+            holderView.tvPrefRowTitle.setTextColor(if (needUpdate) Color.BLUE else Color.BLACK)
+            holderView.tvPrefRowTitle.text = title
+            holderView.tvPrefRowDescription.text = description
         }
     }
 
-    abstract inner class TextPref(title: String, description: String, name: String)
-        : BjPref(title, description) {
-        var mOldName: String = name
-        var mNewName: String = name
-        lateinit var editText: BjEditText
+    abstract inner class TextPref(title: String, private val textDesc: String, private val inText: String)
+        : BjPref(title) {
 
-        override fun settingRuleIn() {
-            if (mTouched) {
-                editText.setText(mNewName)
-            } else {
-                mNewName = editText.text.toString()
-                editText.setText(mOldName)
-                mTouched = true
+        override val description
+            get() = "$textDesc: $outText"
+        override val needUpdate
+            get() = (outText != inText)
+
+        var outText: String = inText
+
+        override fun bindView(holderView: View) {
+            super.bindView(holderView)
+            holderView.textPrefRow.setText(outText)
+        }
+    }
+
+    abstract inner class SwitchPref(title: String, private val descriptionOFF: String,
+                                    private val descriptionON: String,
+                                    private val inChecked: Boolean, val dataText: Array<String>)
+        : BjPref(title) {
+        override val description
+            get() = if (outChecked) descriptionON else descriptionOFF
+        override val needUpdate
+            get() = (outChecked != inChecked)
+
+        var outChecked = inChecked
+
+        override fun bindView(holderView: View) {
+            super.bindView(holderView)
+            holderView.switchPrefRow.isChecked = outChecked
+
+            holderView.switchPrefRow.textOff = dataText[0]
+            holderView.switchPrefRow.textOn = dataText[1]
+        }
+    }
+
+    abstract inner class SpinnerPref(title: String, private val spinDesc: String,
+                                     private val inPos: Int, val dataText: Array<String>)
+        : BjPref(title) {
+        override val description
+            get() = "$spinDesc: ${dataText[outPos]}"
+        override val needUpdate
+            get() = (outPos != inPos)
+
+        var outPos = inPos
+
+        override fun bindView(holderView: View) {
+            super.bindView(holderView)
+            val dataAdapter = BjArrayAdapter(gMainActivity,
+                    R.layout.simple_spinner_dropdown_item, dataText)
+            dataAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item)
+            holderView.spinnerPrefRow.adapter = dataAdapter
+            holderView.spinnerPrefRow.setSelection(outPos)
+
+            holderView.spinnerPrefRow.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                    outPos = position
+//                    updatePreferencesText()
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                }
             }
         }
-
-        override fun needUpdate(): Boolean {
-            return (mOldName.contentEquals(mNewName))
-        }
     }
 
-    abstract inner class SwitchPref(title: String, description: String, var dataText: Array<String>)
-        : BjPref(title, description) {
-        var mIsChecked: Boolean = false
-        var mOldChecked: Boolean = false
-        lateinit var switch: BjSwitch
+    abstract inner class SpinnerTwoPref(title: String, private val spinDesc1: String, inPos1: Int,
+                                        private val spinDesc2: String, private var inPos2: Int,
+                                        dataText1: Array<String>,
+                                        private val dataText2: Array<String>)
+        : SpinnerPref(title, spinDesc1, inPos1, dataText1) {
+        private val description2
+            get() = "$spinDesc2: ${dataText2[outPos2]}"
+        override val needUpdate
+            get() = (super.needUpdate || (outPos2 != inPos2))
 
-        abstract val genuineCheckedValue: Boolean
+        var outPos2 = inPos2
 
-        override fun settingRuleIn() {
-            if (mTouched) {
-                switch.isChecked = mIsChecked
-            } else {
-                mOldChecked = genuineCheckedValue
-                mIsChecked = mOldChecked
-                switch.isChecked = mOldChecked
-                mTouched = true
+        override fun bindView(holderView: View) {
+            super.bindView(holderView)
+
+            val dataAdapter = BjArrayAdapter(gMainActivity,
+                    R.layout.simple_spinner_dropdown_item, dataText2)
+            dataAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item)
+            holderView.spinnerTwoPrefRow.adapter = dataAdapter
+            holderView.spinnerTwoPrefRow.setSelection(outPos2)
+            holderView.tvPrefRowDescription2.text = description2
+
+            holderView.spinnerTwoPrefRow.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                    outPos2 = position
+//                    updatePreferencesText()
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                }
             }
         }
-
-        override fun needUpdate(): Boolean {
-            return (mOldChecked != mIsChecked)
-        }
-
-        override fun toString() = getSubString(if (mTouched) mIsChecked else genuineCheckedValue)
-
-        abstract fun getSubString(isChecked: Boolean): String
-
-        fun postSwitchCheckedChange() {
-            // no nothing now
-        }
     }
 
-    abstract inner class SpinnerPref(title: String, description: String, var dataText: Array<String>)
-        : BjPref(title, description) {
-        var mSelectedPosition: Int = 0
-        var mOldPosition: Int = 0
-        lateinit var spinner: BjSpinner
-
-        abstract val genuineIndexValue: Int
-
-        override fun settingRuleIn() {
-            if (mTouched) {
-                spinner.setSelection(mSelectedPosition)
-            } else {
-                val index = genuineIndexValue
-                spinner.setSelection(index)
-                mOldPosition = spinner.selectedItemPosition
-                mSelectedPosition = mOldPosition
-                mTouched = true
-            }
-        }
-
-        override fun needUpdate(): Boolean {
-            return (mOldPosition != mSelectedPosition)
-        }
-
-        fun postSpinnerItemSelected() {}
-    }
-
-    abstract inner class SpinnerTwoPref(title: String, description: String, dataText: Array<String>,
-                                        var mDataStringsTwo: Array<String>)
-        : SpinnerPref(title, description, dataText) {
-        var mSelectedPositionTwo: Int = 0
-        var mOldPositionTwo: Int = 0
-        lateinit var spinnerTwo: BjSpinner
-
-        abstract override val genuineIndexValue: Int
-
-        abstract val genuineIndexValueTwo: Int
-
-        override fun settingRuleIn() {
-            val mOldTouched = mTouched
-            super.settingRuleIn()
-
-            if (mOldTouched) {
-                spinnerTwo.setSelection(mSelectedPositionTwo)
-            } else {
-                val index = genuineIndexValueTwo
-                spinnerTwo.setSelection(index)
-                mOldPositionTwo = spinnerTwo.selectedItemPosition
-                mSelectedPositionTwo = mOldPositionTwo
-                mTouched = true
-            }
-        }
-
-        override fun needUpdate(): Boolean {
-            return ((super.needUpdate() || (mOldPositionTwo != mSelectedPositionTwo)))
-        }
-
-        fun postSpinnerTwoItemSelected() {
-            // Do nothing now
-        }
-    }
-
-    class BjPrefCategory(val categoryName: String) : ArrayList<BjPref>() {
-        val ruleString: String
+    class BjPrefCategory(private val categoryName: String) : ArrayList<PrefFactory.BjPref>() {
+        val prefStrings: String
             get() {
                 var rString = ""
                 for (pref in this) {
-                    rString += "[$pref] "
+                    rString += "[${pref.prefString}] "
                 }
                 return rString
             }
 
-        var isFolded = false
+        private var isFolded = false
 
         fun needUpdate(): Boolean {
             var needUpdate = false
 
             for (pref in this) {
-                if (pref.needUpdate()) {
+                if (pref.needUpdate) {
                     needUpdate = true
                     break
                 }
             }
 
             return needUpdate
+        }
+
+        fun bindView(holderView: View) {
+            holderView.tvPrefRowCategoryTitle.typeface = FontUtility.contentFace
+            holderView.tvPrefRowCategoryTitle.text = categoryName
+
+            holderView.tvPrefRowCategoryTitle.setOnClickListener({ v ->
+                if (isFolded) {
+                    isFolded = false
+                    holderView.prefRecycleView.visibility = View.VISIBLE
+                } else {
+                    isFolded = true
+                    holderView.prefRecycleView.visibility = View.GONE
+                }
+            })
         }
     }
 
@@ -190,81 +193,70 @@ class PrefFactory {
         get() {
             val dCat = BjPrefCategory("Dealer Options")
 
-            val dealerName = object : TextPref("Dealer Name",
+            val dealerName = object : PrefFactory.TextPref("Dealer Name",
                     "dealer's name", Table.tableRule.dealerName) {
 
-                override fun settingRuleOut() {
-                    Table.tableRule.dealerName = mNewName
-                }
+                override val prefString: String
+                    get() = "dealer=$outText"
 
-                override fun toString(): String {
-                    return "dealer=$mNewName"
-                }
-            }
-
-            val dealerHitSoft17 = object : SwitchPref("Dealer Hit on Soft 17?",
-                    "dealer can hit or stand on Soft 17",
-                    arrayOf("STAND", "HIT")) {
-
-                override val genuineCheckedValue: Boolean
-                    get() = Table.gameRule.hitOnDealerSoft17
-
-                override fun settingRuleOut() {
-                    Table.gameRule.hitOnDealerSoft17 = mIsChecked
-                }
-
-                override fun getSubString(isChecked: Boolean): String {
-                    return if (isChecked) "HS17" else "SS17"
+                override fun commitChange() {
+                    Table.tableRule.dealerName = outText
                 }
             }
+
             dCat.add(dealerName)
 
-            dCat.add(dealerHitSoft17)
-            val dealerAllowSurrender = object : SwitchPref("Allow Surrender",
-                    "player can surrender with first two cards",
-                    arrayOf("NO", "YES")) {
-                override val genuineCheckedValue: Boolean
-                    get() = Table.gameRule.surrenderAllowed
+            val dealerHitSoft17 = object : PrefFactory.SwitchPref("Dealer hit on Soft 17?",
+                    "dealer stands Soft-17", "dealer hit on Soft-17",
+                    Table.gameRule.hitOnDealerSoft17, arrayOf("STAND", "HIT")) {
 
-                override fun settingRuleOut() {
-                    Table.gameRule.surrenderAllowed = mIsChecked
+                override val prefString: String
+                    get() = if (outChecked) "HS17" else "SS17"
+
+                override fun commitChange() {
+                    Table.gameRule.hitOnDealerSoft17 = outChecked
                 }
+            }
+            dCat.add(dealerHitSoft17)
 
-                override fun getSubString(isChecked: Boolean): String {
-                    return if (isChecked) "Surrender" else "No_Surrender"
+            val dealerAllowSurrender = object : SwitchPref("Surrender is allowed for players?",
+                    "player can not surrender", "player can not surrender with first two cards",
+                    Table.gameRule.surrenderAllowed, arrayOf("NO", "YES")) {
+
+                override val prefString: String
+                    get() = if (outChecked) "Surrender" else "No_Surrender"
+
+                override fun commitChange() {
+                    Table.gameRule.surrenderAllowed = outChecked
                 }
             }
             dCat.add(dealerAllowSurrender)
-            val dealerDealSecondCard = object : SwitchPref("Dealer/Split Hand second card deal",
-                    "dealer can deal the second card of dealer hand or split hand at once or later",
-                    arrayOf("ONCE", "LATER")) {
-                override val genuineCheckedValue: Boolean
-                    get() = (Table.gameRule.cardDealRule == CardDealRule.DEAL_LATE)
 
-                override fun settingRuleOut() {
-                    Table.gameRule.cardDealRule = if (mIsChecked)
-                        CardDealRule.DEAL_LATE
-                    else
-                        CardDealRule.DEAL_ONCE
-                }
+            val dealerDealSecondCard = object : SwitchPref("Second card dealt at once for Dealer hand and Split hand?",
+                    "Second card for Dealer hand and Split hand will be dealt later",
+                    "Second card for Dealer hand and Split hand will be dealt at once",
+                    Table.gameRule.cardDealRule == CardDealRule.DEAL_ONCE,
+                    arrayOf("LATE", "ONCE")) {
 
-                override fun getSubString(isChecked: Boolean): String {
-                    return "2ndCard=" + if (isChecked) "LATER" else "ONCE"
+                override val prefString: String
+                    get() = "2ndCard=" + if (outChecked) "ONCE" else "LATER"
+
+                override fun commitChange() {
+                    Table.gameRule.cardDealRule = if (outChecked) CardDealRule.DEAL_ONCE else CardDealRule.DEAL_LATER
                 }
             }
             dCat.add(dealerDealSecondCard)
-            val dealerAllowPeek = object : SwitchPref("Peek-hole allowed",
-                    "Dealer can use peek-hole for Ace or 10 card",
-                    arrayOf("NO", "YES")) {
-                override val genuineCheckedValue: Boolean
-                    get() = (Table.gameRule.peekAllowed)
 
-                override fun settingRuleOut() {
-                    Table.gameRule.peekAllowed = mIsChecked
-                }
+            val dealerAllowPeek = object : SwitchPref("Peek-hole allowed?",
+                    "Dealer can not use peek-hole for Ace or 10 up-card",
+                    "Dealer can use peek-hole for Ace or 10 up-card",
+                    Table.gameRule.peekAllowed, arrayOf("NO", "YES")) {
 
-                override fun getSubString(isChecked: Boolean): String {
-                    return if (isChecked) "Peek" else "No_Peek"
+                override val prefString: String
+                    get() = if (outChecked) "Peek" else "No_Peek"
+
+                override fun commitChange() {
+                    Table.gameRule.peekAllowed = outChecked
                 }
             }
             dCat.add(dealerAllowPeek)
@@ -277,62 +269,37 @@ class PrefFactory {
     val doubledownPrefCategory: BjPrefCategory
         get() {
             val ddCat = BjPrefCategory("Doubledown Options")
-            val doubledownAfterSplit = object : SwitchPref("Doubledown after Split",
-                    "player can doubledown after card splitting",
-                    arrayOf("NO", "YES")) {
-                override val genuineCheckedValue: Boolean
-                    get() = (Table.gameRule.doubleAllowedAfterSplit)
 
-                override fun settingRuleOut() {
-                    Table.gameRule.doubleAllowedAfterSplit = mIsChecked
-                }
+            val doubledownAfterSplit = object : SwitchPref("Doubledown after Split allowed?",
+                    "player CAN NOT doubledown after split",
+                    "player can doubledown after split",
+                    Table.gameRule.doubleAllowedAfterSplit, arrayOf("NO", "YES")) {
 
-                override fun getSubString(isChecked: Boolean): String {
-                    return if (isChecked) "DaSp" else "No_DaSp"
+                override val prefString: String
+                    get() = if (outChecked) "DaSp" else "No_DaSp"
+
+                override fun commitChange() {
+                    Table.gameRule.doubleAllowedAfterSplit = outChecked
                 }
             }
             ddCat.add(doubledownAfterSplit)
 
-            val doubledownOn = object : SpinnerPref("Doubledown on",
-                    "Double down on any 2 cards, 9/10/11, or 10/11",
-                    arrayOf("Any 2 cards", "9/10/11", "10/11")) {
+            val doubledownOn = object : SpinnerPref("Doubledown on which two cards?",
+                    "Player can doubledown on", when (Table.gameRule.doubleDownRule) {
+                DoubleDownRule.NINE_TEN_ELEVEN -> 1
+                DoubleDownRule.TEN_ELEVEN -> 2
+                else -> 0
+            }, arrayOf("Any 2 cards", "9/10/11", "10/11")) {
 
-                override val genuineIndexValue: Int
-                    get() {
-                        val index: Int
-                        when (Table.gameRule.doubleDownRule) {
-                            DoubleDownRule.ANY_TWO -> index = 0
-                            DoubleDownRule.NINE_TEN_ELEVEN -> index = 1
-                            DoubleDownRule.TEN_ELEVEN -> index = 2
-                        }
+                override val prefString: String
+                    get() = dataText[outPos]
 
-                        return index
+                override fun commitChange() {
+                    Table.gameRule.doubleDownRule = when (outPos) {
+                        1 -> DoubleDownRule.NINE_TEN_ELEVEN
+                        2 -> DoubleDownRule.TEN_ELEVEN
+                        else -> DoubleDownRule.ANY_TWO
                     }
-
-                override fun settingRuleOut() {
-                    Table.gameRule.doubleDownRule = getRuleDoubledownByIndex(mSelectedPosition)
-                }
-
-                fun getRuleDoubledownByIndex(index: Int) = when (index) {
-                    0 -> DoubleDownRule.ANY_TWO
-                    1 -> DoubleDownRule.NINE_TEN_ELEVEN
-                    2 -> DoubleDownRule.TEN_ELEVEN
-                    else -> DoubleDownRule.ANY_TWO
-                }
-
-                override fun toString(): String {
-                    val rule = if (mTouched)
-                        getRuleDoubledownByIndex(mSelectedPosition)
-                    else
-                        Table.gameRule.doubleDownRule
-
-                    return ("DD=" + (if (rule == DoubleDownRule.ANY_TWO)
-                        "Any2"
-                    else
-                        if (rule === DoubleDownRule.NINE_TEN_ELEVEN)
-                            "9/10/11"
-                        else
-                            "10/11"))
                 }
             }
             ddCat.add(doubledownOn)
@@ -346,75 +313,55 @@ class PrefFactory {
             val sPrefs = BjPrefCategory("Split Options")
 
             val splitMaximum = object : SpinnerPref("Maximum number of split",
-                    "player can split",
-                    arrayOf("1-Split", "2-Split", "3-Split", "4-Split", "all the time")) {
+                    "player can split upto:",
+                    when (Table.gameRule.maxSplitCount) {
+                        1 -> 0
+                        2 -> 1
+                        3 -> 2
+                        4 -> 3
+                        else -> 4
+                    }, arrayOf("1-Split", "2-Split", "3-Split", "4-Split", "all the time")) {
 
-                override val genuineIndexValue: Int
-                    get() {
-                        val index: Int
-                        when (Table.gameRule.maxSplitCount) {
-                            1, 2, 3, 4 -> index = Table.gameRule.maxSplitCount - 1
-                            99 -> index = 4
-                            else -> index = 4
-                        }
-                        return index
+                override fun commitChange() {
+                    Table.gameRule.maxSplitCount = when (outPos) {
+                        0 -> 1
+                        1 -> 2
+                        2 -> 3
+                        3 -> 4
+                        else -> Int.MAX_VALUE
                     }
-
-                override fun settingRuleOut() {
-                    Table.gameRule.maxSplitCount = getMaxSplitByIndex(mSelectedPosition)
                 }
 
-                fun getMaxSplitByIndex(index: Int): Int {
-                    val maxSplit: Int
-                    when (index) {
-                        0, 1, 2, 3 -> maxSplit = index + 1
-                        4 -> maxSplit = 99
-                        else -> maxSplit = 4
-                    }
-                    return maxSplit
-                }
-
-                override fun toString(): String {
-                    val maxSplit = if (mTouched)
-                        getMaxSplitByIndex(mSelectedPosition)
-                    else
-                        Table.gameRule.maxSplitCount
-                    return ("maxSp=" + (if ((maxSplit == 99)) "Any" else (maxSplit).toString()))
-                }
+                override val prefString: String
+                    get() = dataText[outPos]
             }
             sPrefs.add(splitMaximum)
 
             val allowAceResplit = object : SwitchPref("Allow re-split for Ace?",
+                    "player can not re-split Ace split hand",
                     "player can re-split Ace split hand",
-                    arrayOf("NO", "YES")) {
+                    Table.gameRule.allowAceResplit, arrayOf("NO", "YES")) {
 
-                override val genuineCheckedValue: Boolean
-                    get() = Table.gameRule.allowAceResplit
-
-                override fun settingRuleOut() {
-                    Table.gameRule.allowAceResplit = mIsChecked
+                override fun commitChange() {
+                    Table.gameRule.allowAceResplit = outChecked
                 }
 
-                override fun getSubString(isChecked: Boolean): String {
-                    return (if (isChecked) "AceResplit" else "No_AceResplit")
-                }
+                override val prefString: String
+                    get() = if (outChecked) "AceResplit" else "No_AceResplit"
             }
             sPrefs.add(allowAceResplit)
 
             val splitDifferentTen = object : SwitchPref("Allow split different 10 values cards?",
+                    "player can not split different 10 value cards: 10-Jack-Queen-King",
                     "player can split different 10 value cards: 10-Jack-Queen-King",
-                    arrayOf("NO", "YES")) {
+                    Table.gameRule.allowSplitDifferentTenValues, arrayOf("NO", "YES")) {
 
-                override val genuineCheckedValue: Boolean
-                    get() = Table.gameRule.allowSplitDifferentTenValues
-
-                override fun settingRuleOut() {
-                    Table.gameRule.allowSplitDifferentTenValues = mIsChecked
+                override fun commitChange() {
+                    Table.gameRule.allowSplitDifferentTenValues = outChecked
                 }
 
-                override fun getSubString(isChecked: Boolean): String {
-                    return (if (isChecked) "SpD10" else "No_SpD10")
-                }
+                override val prefString: String
+                    get() = if (outChecked) "SpD10" else "No_SpD10"
             }
             sPrefs.add(splitDifferentTen)
 
@@ -426,152 +373,109 @@ class PrefFactory {
             val tPrefs = BjPrefCategory("Table Options")
 
             // Number of Decks of Shoe: Deck=1 ~ Deck=8
-            val shoeDeckCount = object : SpinnerPref("Number of Decks in Shoe",
-                    "How many decks are used in Shoe",
+            val shoeDeckCount = object : SpinnerPref("How many decks are used in Shoe",
+                    "Number of Decks in Shoe",
+                    when (Table.tableRule.numDecks) {
+                        1 -> 0
+                        2 -> 1
+                        4 -> 2
+                        6 -> 3
+                        else -> 4
+                    },
                     arrayOf("Single Deck", "Double Deck", "4 Decks", "6 Decks", "8 Decks")) {
 
-                override val genuineIndexValue: Int = when (Table.tableRule.numDecks) {
-                    1 -> 0
-                    2 -> 1
-                    4 -> 2
-                    6 -> 3
-                    8 -> 4
-                    else -> 3
+                override fun commitChange() {
+                    Table.tableRule.numDecks = when (outPos) {
+                        0 -> 1
+                        1 -> 2
+                        2 -> 4
+                        3 -> 6
+                        else -> 8
+                    }
                 }
 
-                override fun settingRuleOut() {
-                    Table.tableRule.numDecks = getNumDecksByIndex(mSelectedPosition)
-                }
-
-                fun getNumDecksByIndex(index: Int): Int = when (index) {
-                    0 -> 1
-                    1 -> 2
-                    2 -> 4
-                    3 -> 6
-                    4 -> 8
-                    else -> 6
-                }
-
-                override fun toString(): String {
-                    val nDecks = if (mTouched)
-                        getNumDecksByIndex(mSelectedPosition)
-                    else
-                        Table.tableRule.numDecks
-                    return "Deck=" + (nDecks).toString()
-                }
+                override val prefString: String
+                    get() = "shoe=${dataText[outPos]}"
             }
             tPrefs.add(shoeDeckCount)
 
             // Max Number of Multi-Hand: Box-1 ~ Box-8
-            val tableBoxCount = object : SpinnerPref("Maximum number of multi-hand",
-                    "How many boxes for multi player hand",
+            val tableBoxCount = object : SpinnerPref("How many boxes for multi player hand?",
+                    "Maximum number of multi-hand:",
+                    when {
+                        (Table.tableRule.numBoxes <= 8) -> (Table.tableRule.numBoxes - 1)
+                        else -> 8
+                    },
                     arrayOf("1 Box", "2 Boxes", "3 Boxes", "4 Boxes", "5 Boxes", "6 Boxes", "7 Boxes", "8 Boxes", "20 Boxes")) {
 
-                override val genuineIndexValue: Int = when (Table.tableRule.numBoxes) {
-                    1, 2, 3, 4, 5, 6, 7, 8 -> Table.tableRule.numBoxes - 1
-                    else -> 8
+                override fun commitChange() {
+                    Table.tableRule.numBoxes = when {
+                        (outPos < 8) -> (outPos + 1)
+                        else -> 20
+                    }
                 }
 
-                override fun settingRuleOut() {
-                    Table.tableRule.numBoxes = getNumBoxesByIndex(mSelectedPosition)
-                }
-
-                fun getNumBoxesByIndex(index: Int): Int = when (index) {
-                    0, 1, 2, 3, 4, 5, 6, 7 -> index + 1
-                    else -> 20
-                }
-
-                override fun toString(): String {
-                    val numBoxes: Int = if (mTouched)
-                        getNumBoxesByIndex(mSelectedPosition)
-                    else
-                        Table.tableRule.numBoxes
-                    return "Boxes=" + (numBoxes).toString()
-                }
+                override val prefString: String = "Boxes=${if (outPos < 8) (outPos + 1) else 20}"
             }
             tPrefs.add(tableBoxCount)
 
-            val tableBlackjackPayout = object : SwitchPref("Blackjack Payout",
-                    "Casino pays player's Blackjack with payout ratio: 6 to 5, or 3 to 2",
-                    arrayOf("6-5", "3-2")) {
-                override val genuineCheckedValue: Boolean
-                    get() = (Table.tableRule.blackjackPayout == 1.5f)
+            val tableBlackjackPayout = object : SwitchPref("Blackjack Payout Ratio",
+                    "Casino pays player's Blackjack with payout ratio: 6-5",
+                    "Casino pays player's Blackjack with payout ratio: 3-2",
+                    (Table.gameRule.blackjackRate == 1.5f), arrayOf("6-5", "3-2")) {
 
-                override fun settingRuleOut() {
-                    Table.tableRule.blackjackPayout = if (mIsChecked) 1.5f else 1.2f
+                override fun commitChange() {
+                    Table.tableRule.blackjackPayout = if (outChecked) 1.5f else 1.2f
                 }
 
-                override fun getSubString(isChecked: Boolean): String {
-                    return ("BJ_Payout=" + (if (isChecked) "3-2" else "6-5"))
-                }
+                override val prefString: String
+                    get () = "BJ_Payout=${if (outChecked) "3-2" else "6-5"}"
             }
             tPrefs.add(tableBlackjackPayout)
 
-            val tableMinBet = object : SpinnerPref("Minimum Betting",
-                    "minimum betting of players for each hand",
-                    arrayOf("$1", "$5", "$10", "$25")) {
-                override val genuineIndexValue: Int = when (Table.tableRule.minBet) {
-                    1.0f -> 0
-                    5.0f -> 1
-                    10.0f -> 2
-                    else -> 3
+            val tableMinBet = object : SpinnerPref("Minimum Bet",
+                    "minimum betting of players for each hand:",
+                    when (Table.tableRule.minBet) {
+                        5.0f -> 1
+                        10.0f -> 2
+                        25.0f -> 3
+                        else -> 0
+                    }, arrayOf("$1", "$5", "$10", "$25")) {
+
+                override fun commitChange() {
+                    Table.tableRule.minBet = when (outPos) {
+                        1 -> 5.0f
+                        2 -> 10.0f
+                        3 -> 25.0f
+                        else -> 1.0f
+                    }
                 }
 
-                override fun settingRuleOut() {
-                    Table.tableRule.minBet = getMinBetByIndex(mSelectedPosition)
-                }
-
-                fun getMinBetByIndex(index: Int): Float = when (index) {
-                    0 -> 1.0f
-                    1 -> 5.0f
-                    2 -> 10.0f
-                    3 -> 25.0f
-                    else -> 1.0f
-                }
-
-                override fun toString(): String {
-                    val minBet = if (mTouched)
-                        getMinBetByIndex(mSelectedPosition)
-                    else
-                        Table.tableRule.minBet
-                    return "MinBet=" + minBet.toDollarAmountFloor()
-                }
+                override val prefString: String
+                    get() = "minBet=${dataText[outPos]}"
             }
             tPrefs.add(tableMinBet)
 
-            val tableMaxBet = object : SpinnerPref("Maximum Bet Amount",
-                    "maximum betting of players for each hand",
-                    arrayOf("$100", "$1,000", "$10,000", "No Limit")) {
-                override val genuineIndexValue: Int = when (Table.tableRule.maxBet) {
-                    100.0f -> 0
-                    1_000.0f -> 1
-                    10_000.0f -> 2
-                    else -> 3
+            val tableMaxBet = object : SpinnerPref("Maximum Bet",
+                    "maximum betting of players for each hand:",
+                    when (Table.tableRule.minBet) {
+                        100.0f -> 0
+                        1_000.0f -> 1
+                        10_000.0f -> 2
+                        else -> 3
+                    }, arrayOf("$100", "$1,000", "$10,000", "No Limit")) {
+
+                override fun commitChange() {
+                    Table.tableRule.maxBet = when (outPos) {
+                        0 -> 100.0f
+                        1 -> 1_000.0f
+                        2 -> 10_000.0f
+                        else -> Float.MAX_VALUE
+                    }
                 }
 
-                override fun settingRuleOut() {
-                    Table.tableRule.maxBet = getMaxBetByIndex(mSelectedPosition)
-                }
-
-                fun getMaxBetByIndex(index: Int): Float = when (index) {
-                    0 -> 100.0f
-                    1 -> 1_000.0f
-                    2 -> 10_000.0f
-                    3 -> java.lang.Float.MAX_VALUE
-                    else -> 1_000.0f
-                }
-
-                override fun toString(): String {
-                    val maxBet: Float = if (mTouched)
-                        getMaxBetByIndex(mSelectedPosition)
-                    else
-                        Table.tableRule.maxBet
-
-                    return ("MaxBet=" + (if ((maxBet < java.lang.Float.MAX_VALUE))
-                        maxBet.toDollarAmountFloor()
-                    else
-                        "No-Limit"))
-                }
+                override val prefString: String
+                    get() = "maxBet=${dataText[outPos]}"
             }
             tPrefs.add(tableMaxBet)
 
@@ -584,93 +488,70 @@ class PrefFactory {
 
             val tablePlayerBankroll = object : SpinnerPref("Player's initial bankroll",
                     "Player starts with bankroll",
-                    arrayOf("$100", "$1,000", "$10,000", "$100,000", "$1,000,000", "No-Limit")) {
+                    when (Table.tableRule.initBalance) {
+                        100.0f -> 0
+                        1_000.0f -> 1
+                        10_000.0f -> 2
+                        100_000.0f -> 3
+                        1_000_000.0f -> 4
+                        else -> 5
+                    }, arrayOf("$100", "$1,000", "$10,000", "$100,000", "$1,000,000", "No-Limit")) {
 
-                override val genuineIndexValue: Int = when (Table.tableRule.initBalance) {
-                    100.0f -> 0
-                    1_000.0f -> 1
-                    10_000.0f -> 2
-                    100_000.0f -> 3
-                    1_000_000.0f -> 4
-                    else -> 5
+                override fun commitChange() {
+                    Table.tableRule.initBalance = when (outPos) {
+                        0 -> 100.0f
+                        1 -> 1_000.0f
+                        2 -> 10_000.0f
+                        3 -> 100_000.0f
+                        4 -> 1_000_000.0f
+                        else -> Float.MAX_VALUE
+                    }
                 }
 
-                override fun settingRuleOut() {
-                    Table.tableRule.initBalance = getBankrollByIndex(mSelectedPosition)
-                }
-
-                fun getBankrollByIndex(index: Int): Float = when (index) {
-                    0 -> 100.0f
-                    1 -> 1_000.0f
-                    2 -> 10_000.0f
-                    3 -> 100_000.0f
-                    4 -> 1_000_000.0f
-                    5 -> java.lang.Float.MAX_VALUE
-                    else -> 10_000.0f
-                }
-
-                override fun toString(): String {
-                    val bankroll: Float = if (mTouched)
-                        getBankrollByIndex(mSelectedPosition)
-                    else
-                        Table.tableRule.initBalance
-
-                    return ("Bankroll=" + (if ((bankroll < java.lang.Double.MAX_VALUE))
-                        bankroll.toDollarAmountFloor()
-                    else
-                        "No-Limit"))
-                }
+                override val prefString: String
+                    get() = "iniTBalance=${dataText[outPos]}"
             }
             rCat.add(tablePlayerBankroll)
 
             val useRandomShoe = object : SwitchPref("Shoe Random Seed",
-                    "shoe uses fixed random seed",
-                    arrayOf("Random", "Fixed")) {
+                    "shoe uses new random seed at each launch",
+                    "shoe uses fixed random seed at each launch",
+                    Table.tableRule.fixedRandom, arrayOf("Random", "Fixed")) {
 
-                override val genuineCheckedValue: Boolean
-                    get() = Table.tableRule.fixedRandom
-
-                override fun settingRuleOut() {
-                    Table.tableRule.fixedRandom = mIsChecked
+                override fun commitChange() {
+                    Table.tableRule.fixedRandom = outChecked
                 }
 
-                override fun getSubString(isChecked: Boolean): String {
-                    return ("Shoe=" + (if (isChecked) "Random" else "Fixed"))
-                }
+                override val prefString: String
+                    get() = "Shoe=${if (outChecked) "Fixed" else "New"}"
             }
             rCat.add(useRandomShoe)
 
             val useSound = object : SwitchPref("Play Sounds",
-                    "Game sound can be turned ON or OFF",
-                    arrayOf("OFF", "ON")) {
+                    "during game, sound play OFF",
+                    "during game, sound play ON",
+                    Table.tableRule.useSound, arrayOf("OFF", "ON")) {
 
-                override val genuineCheckedValue: Boolean
-                    get() = Table.tableRule.useSound
-
-                override fun settingRuleOut() {
-                    Table.tableRule.useSound = mIsChecked
+                override fun commitChange() {
+                    Table.tableRule.useSound = outChecked
                 }
 
-                override fun getSubString(isChecked: Boolean): String {
-                    return ("Sound=" + (if (isChecked) "ON" else "OFF"))
-                }
+                override val prefString: String
+                    get() = "Sound=${if (outChecked) "ON" else "OFF"}"
             }
             rCat.add(useSound)
 
             val useAnimation = object : SwitchPref("Animations",
-                    "Card Animations can be turned ON or OFF",
-                    arrayOf("OFF", "ON")) {
+                    "during game, no animations",
+                    "during game, animations OK",
+                    Table.tableRule.useAnimation, arrayOf("OFF", "ON")) {
 
-                override val genuineCheckedValue: Boolean
-                    get() = Table.tableRule.useAnimation
-
-                override fun settingRuleOut() {
-                    Table.tableRule.useAnimation = mIsChecked
+                override fun commitChange() {
+                    Table.tableRule.useAnimation = outChecked
                 }
 
-                override fun getSubString(isChecked: Boolean): String {
-                    return ("Animation=" + (if (isChecked) "ON" else "OFF"))
-                }
+                override val prefString: String
+                    get() = "Animation=${if (outChecked) "ON" else "OFF"}"
             }
             rCat.add(useAnimation)
 
@@ -748,7 +629,7 @@ class PreferenceFrag : BjFragment() {
                 val alert_confirm = AlertDialog.Builder(gMainActivity)
                 alert_confirm.setMessage("Save changed settings?").setCancelable(false)
                         .setPositiveButton("Yes") { dialog, which ->
-                            updatePreferences()
+                            commitPrefChanges()
                             gMainActivity.onBackPressed()
                         }.setNegativeButton("Cancel",
                                 DialogInterface.OnClickListener { dialog, which ->
@@ -792,39 +673,38 @@ class PreferenceFrag : BjFragment() {
     }
 
     fun updatePreferencesText() {
-        var rString = ""
+        var pString = ""
         for (cat in totalPreference) {
-            rString += cat.ruleString
+            pString += cat.prefStrings
         }
 
-        fun spanRuleString(): CharSequence {
-            val span = SpannableString(rString)
+        fun spanPrefStrings(): CharSequence {
+            val span = SpannableString(pString)
 
-            var pos = rString.indexOf('[', 0)
+            var pos = pString.indexOf('[', 0)
             while (pos >= 0) {
                 span.setSpan(ForegroundColorSpan(Color.BLUE), pos, pos + 1,
                         Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                pos = rString.indexOf('[', pos + 1)
+                pos = pString.indexOf('[', pos + 1)
             }
 
-            pos = rString.indexOf(']', 0)
+            pos = pString.indexOf(']', 0)
             while (pos >= 0) {
                 span.setSpan(ForegroundColorSpan(Color.BLUE), pos, pos + 1,
                         Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                pos = rString.indexOf(']', pos + 1)
+                pos = pString.indexOf(']', pos + 1)
             }
             return span
         }
 
-        tvRuleText_Preference.text = spanRuleString()
+        tvRuleText_Preference.text = spanPrefStrings()
     }
 
     //=== adding settings ===
-    private fun updatePreferences() {
+    private fun commitPrefChanges() {
         for (cat in totalPreference) {
             for (pref in cat) {
-                if (pref.needUpdate()) pref.settingRuleOut()
-                pref.mTouched = false
+                if (pref.needUpdate) pref.commitChange()
             }
         }
     }
@@ -879,22 +759,8 @@ class PreferenceFrag : BjFragment() {
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val cat = catList[position]
-
-//            holder.mView.prefRecycleView.layoutManager = LinearLayoutManager(gMainActivity)
             holder.mView.prefRecycleView.adapter = BjPrefViewAdapter(cat, null)
-
-            holder.mView.tvPrefRowCategoryTitle.typeface = FontUtility.contentFace
-            holder.mView.tvPrefRowCategoryTitle.text = cat.categoryName
-
-            holder.mView.tvPrefRowCategoryTitle.setOnClickListener({ v ->
-                if (cat.isFolded) {
-                    cat.isFolded = false
-                    holder.mView.prefRecycleView.visibility = View.VISIBLE
-                } else {
-                    cat.isFolded = true
-                    holder.mView.prefRecycleView.visibility = View.GONE
-                }
-            })
+            cat.bindView(holder.mView)
         }
 
         override fun getItemCount(): Int {
@@ -936,102 +802,11 @@ class PreferenceFrag : BjFragment() {
             val pref = prefList[position]
 
             holder.mView.tvPrefRowDescription.typeface = FontUtility.contentFace
-
-            when (pref) {
-                is PrefFactory.TextPref -> {
-                    pref.editText = holder.itemView.textPrefRow
-
-                    pref.editText.setText(pref.mNewName)
-
-                    pref.editText.setOnEditorActionListener({ v, actionId, event ->
-                        pref.mNewName = pref.editText.text.toString()
-                        if (pref.needUpdate()) {
-                            holder.itemView.tvPrefRowTitle.setTextColor(Color.BLUE)  // TODO: Colors
-                        } else {
-                            holder.itemView.tvPrefRowTitle.setTextColor(Color.BLACK)    // TODO: Colors
-                        }
-                        updatePreferencesText()
-                        true
-                    })
-                }
-                is PrefFactory.SwitchPref -> {
-                    pref.switch = holder.itemView.switchPrefRow
-
-                    pref.switch.textOff = pref.dataText[0]    // TODO: check
-                    pref.switch.textOn = pref.dataText[1]     // TODO: check
-
-                    pref.switch.setOnCheckedChangeListener({ _, isChecked ->
-                        pref.mIsChecked = isChecked
-                        if (pref.needUpdate()) {
-                            holder.itemView.tvPrefRowTitle.setTextColor(Color.BLUE)  // TODO: Colors
-                        } else {
-                            holder.itemView.tvPrefRowTitle.setTextColor(Color.BLACK)    // TODO: Colors
-                        }
-                        updatePreferencesText()
-                        pref.postSwitchCheckedChange()
-                    })
-                }
-                is PrefFactory.SpinnerPref -> {
-                    pref.spinner = holder.itemView.spinnerPrefRow
-
-                    val dataAdapter = BjArrayAdapter(gMainActivity,
-                            R.layout.simple_spinner_dropdown_item,
-                            pref.dataText)
-                    dataAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item)
-                    pref.spinner.adapter = dataAdapter
-
-                    pref.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                            pref.mSelectedPosition = position
-                            if (pref.needUpdate()) {
-                                holder.itemView.tvPrefRowTitle.setTextColor(Color.BLUE)
-                            } else {
-                                holder.itemView.tvPrefRowTitle.setTextColor(Color.BLACK)
-                            }
-                            updatePreferencesText()
-                            pref.postSpinnerItemSelected()
-                        }
-
-                        override fun onNothingSelected(parent: AdapterView<*>?) {
-                        }
-                    }
-
-                    if (pref is PrefFactory.SpinnerTwoPref) {
-                        val dataAdapterTwo = BjArrayAdapter(gMainActivity,
-                                R.layout.simple_spinner_dropdown_item,
-                                pref.mDataStringsTwo)
-
-                        dataAdapterTwo.setDropDownViewResource(R.layout.simple_spinner_dropdown_item)
-                        pref.spinnerTwo.adapter = dataAdapterTwo
-
-                        pref.spinnerTwo.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-                                pref.mSelectedPositionTwo = position
-                                if (pref.needUpdate()) {
-                                    holder.itemView.tvPrefRowTitle.setTextColor(Color.BLUE)
-                                } else {
-                                    holder.itemView.tvPrefRowTitle.setTextColor(Color.BLACK)
-                                }
-                                updatePreferencesText()
-                                pref.postSpinnerTwoItemSelected()
-                            }
-
-                            override fun onNothingSelected(parent: AdapterView<*>) {}
-                        }
-                    }
-                }
-                else -> {
-                }
-            }
+            pref.bindView(holder.mView)
 
             holder.mView.setOnClickListener {
                 mListener?.onListFragmentInteraction(pref)
             }
-
-            holder.mView.tvPrefRowTitle.text = pref.title
-            holder.mView.tvPrefRowDescription.text = pref.description
-
-            pref.settingRuleIn()
         }
 
         override fun getItemCount(): Int {
