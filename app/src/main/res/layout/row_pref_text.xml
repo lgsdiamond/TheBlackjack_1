@@ -17,15 +17,28 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.lgsdiamond.theblackjack.BjEditText
+    <com.lgsdiamond.theblackjack.BjTextView
         android:id="@+id/textPrefRow"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
         android:layout_marginStart="20dp"
+        android:layout_marginTop="8dp"
         android:inputType="text"
         android:singleLine="true"
         android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/textPrefRowChange"
         app:layout_constraintStart_toStartOf="@id/include_in_text"
+        app:layout_constraintTop_toTopOf="@+id/textPrefRowChange" />
+
+    <com.lgsdiamond.theblackjack.BjButton
+        android:id="@+id/textPrefRowChange"
+        style="@style/boxButton"
+        android:layout_width="wrap_content"
+        android:layout_height="30sp"
+        android:text="Change..."
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="@id/include_in_text"
         app:layout_constraintTop_toBottomOf="@id/include_in_text" />
 
 </android.support.constraint.ConstraintLayout>

@@ -1,7 +1,6 @@
 package com.lgsdiamond.theblackjack
 
 import android.app.AlertDialog
-import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.pm.ActivityInfo
@@ -124,7 +123,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private fun finishApp(toAsk: Boolean) {
         if (toAsk) {
             val builder = AlertDialog.Builder(this)
-                    .setTitle("Exit TheBlackjack")
+                    .setTitle("Exit TheBlackjack".spanTitleFace())
                     .setMessage("Do you want to exit TheBlackjack?")
                     .setPositiveButton("Yes") { dlg, value ->
                         moveTaskToBack(true)
@@ -189,7 +188,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // empty body
     }
 
-    override fun onListFragmentInteraction(item: PrefFactory.BjPref) {
+    override fun onListFragmentInteraction(item: PreferenceFrag.BjPref) {
         // empty body
     }
 

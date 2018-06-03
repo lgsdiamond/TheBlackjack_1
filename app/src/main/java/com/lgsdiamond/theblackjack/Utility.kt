@@ -1,5 +1,8 @@
 package com.lgsdiamond.theblackjack
 
+import android.graphics.Typeface
+import android.text.Spannable
+import android.text.SpannableString
 import android.widget.Toast
 import java.text.DecimalFormat
 import kotlin.math.ceil
@@ -30,4 +33,19 @@ fun Float.toAllinBet(): Float {     // $1 unit
 
 fun String.toToastShort() {
     Toast.makeText(gContext, this, Toast.LENGTH_SHORT).show()
+}
+
+fun CharSequence.spanTitleFace(): CharSequence {
+    return spanFace(FontUtility.titleFace)
+}
+
+fun CharSequence.spanContentFace(): CharSequence {
+    return spanFace(FontUtility.contentFace)
+}
+
+fun CharSequence.spanFace(face: Typeface): CharSequence {
+    val span = SpannableString(this)
+    span.setSpan(CustomTypefaceSpan("", face), 0, this.length,
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+    return span
 }
