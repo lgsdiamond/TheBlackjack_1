@@ -11,4 +11,15 @@
     <dimen name="cardHeight">87dp</dimen>
     <dimen name="cardWidthGap">20dp</dimen>
     <dimen name="cardHeightGap">0dp</dimen>
+
+    <!--Text Sizes-->
+    <dimen name="_10sp">10dp</dimen>
+    <dimen name="_12sp">12dp</dimen>
+    <dimen name="_14sp">14dp</dimen>
+    <dimen name="_16sp">16dp</dimen>
+    <dimen name="_18sp">18dp</dimen>
+    <dimen name="_20sp">20dp</dimen>
+    <dimen name="action_button_textSize">16dp</dimen>
+
+    <dimen name="action_button_height">30sp</dimen>
 </resources>
