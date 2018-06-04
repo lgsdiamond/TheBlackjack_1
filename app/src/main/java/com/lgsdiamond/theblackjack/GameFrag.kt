@@ -450,7 +450,7 @@ class GameFrag : BjFragment() {
         handAdapter = HandAdapter(table.dealer.playerHands)
         player_hand_recyclerView.adapter = handAdapter
 
-        handLayoutManager = HandLayoutManager(context!!)
+        handLayoutManager = HandLayoutManager(gMainActivity)
         player_hand_recyclerView.layoutManager = handLayoutManager
     }
 

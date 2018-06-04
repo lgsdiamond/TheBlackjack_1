@@ -48,14 +48,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private var currentFrag: BjFragment? = null
 
-    val bettingFrag = BettingFrag.newInstance("Betting Strategy")
-    val countingFrag = CountingFrag.newInstance("Card Counting")
-    val learningFrag = LearningFrag.newInstance("Learning Blackjack")
-    val gameFrag = GameFrag.newInstance("Blackjack Table")
-    val preferenceFrag = PreferenceFrag.newInstance("Preferences")
-    val simulationFrag = SimulationFrag.newInstance("Simulation")
-    val statisticsFrag = StatisticsFrag.newInstance("Statistics")
-    val strategyFrag = StrategyFrag.newInstance("Strategy")
+    private val bettingFrag = BettingFrag.newInstance("Betting Strategy")
+    private val countingFrag = CountingFrag.newInstance("Card Counting")
+    private val learningFrag = LearningFrag.newInstance("Learning Blackjack")
+    private val gameFrag = GameFrag.newInstance("Blackjack Table")
+    private val preferenceFrag = PreferenceFrag.newInstance("Preferences")
+    private val simulationFrag = SimulationFrag.newInstance("Simulation")
+    private val statisticsFrag = StatisticsFrag.newInstance("Statistics")
+    private val strategyFrag = StrategyFrag.newInstance("Strategy")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -112,12 +112,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onResumeFragments() {
         super.onResumeFragments()
-        "onResumeFragments".toToastShort()      // TODO-testing
+        "onResumeFragments".toToastShort()
     }
 
     override fun onPause() {
         super.onPause()
-        "onPause".toToastShort()                // TODO-testing
+        "onPause".toToastShort()
     }
 
     private fun finishApp(toAsk: Boolean) {
@@ -125,7 +125,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             val builder = AlertDialog.Builder(this)
                     .setTitle("Exit TheBlackjack".spanTitleFace())
                     .setMessage("Do you want to exit TheBlackjack?")
-                    .setPositiveButton("Yes") { dlg, value ->
+                    .setPositiveButton("Yes") { _, _ ->
                         moveTaskToBack(true)
                         finish()
                         android.os.Process.killProcess(android.os.Process.myPid())
@@ -228,12 +228,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val winManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
         winManager.defaultDisplay.getMetrics(sMetrics)
 
-        btnTest.setOnClickListener({ v: View ->
-            runTest(v)
+        btnTest.setOnClickListener({ _: View ->
+            runTest()
         })
 
-        btnStart.setOnClickListener({ v: View ->
-            startGame(v)
+        btnStart.setOnClickListener({ _: View ->
+            startGame()
         })
     }
 
@@ -243,34 +243,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private fun switchFragment(frag: BjFragment) {
         if (frag == currentFrag) return
 
-        fragmentManager.beginTransaction()
-                .addToBackStack(currentFrag?.barTitle)
-                .replace(R.id.loFragHolder, frag, frag.barTitle)
-                .show(frag)
-                .commit()
+        val transaction = fragmentManager.beginTransaction()
+
+        // add backStack for valid frag
+        if ((currentFrag != null) && (currentFrag != preferenceFrag))
+            transaction.addToBackStack(currentFrag?.barTitle)
+
+        transaction.replace(R.id.loFragHolder, frag, frag.barTitle)
+        transaction.show(frag)
+        transaction.commit()
 
         frag.setActionBarTitle()
         currentFrag = frag        // now it becomes current
-
-        return
-
-        when (currentFrag) {
-            gameFrag, preferenceFrag -> {
-                fragmentManager.beginTransaction()
-                        .replace(R.id.loFragHolder, frag, frag.barTitle)
-                        .show(frag)
-                        .commit()
-            }
-            null, is BjFragment -> {
-                fragmentManager.beginTransaction()
-                        .addToBackStack(currentFrag?.barTitle)
-                        .replace(R.id.loFragHolder, frag, frag.barTitle)
-                        .show(frag)
-                        .commit()
-            }
-            else -> {
-            }
-        }
     }
 
     private fun showAbout() {
@@ -278,12 +262,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     //== TESTING ==
-    private fun runTest(v: View) {
-
-        val done = true
+    private fun runTest() {
     }
 
-    private fun startGame(v: View) {
+    private fun startGame() {
         switchFragment(gameFrag)
     }
 
