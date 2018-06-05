@@ -47,5 +47,6 @@ fun CharSequence.spanFace(face: Typeface): CharSequence {
     val span = SpannableString(this)
     span.setSpan(CustomTypefaceSpan("", face), 0, this.length,
             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
     return span
 }

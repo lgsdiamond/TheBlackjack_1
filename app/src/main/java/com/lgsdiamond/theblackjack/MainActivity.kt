@@ -2,6 +2,7 @@ package com.lgsdiamond.theblackjack
 
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.ActivityInfo
 import android.graphics.Color
@@ -171,7 +172,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 return true
             }
             R.id.action_about -> {
-                showAbout()
+                runSettingActivity()
+//                showAbout() // TODO-
                 return true
             }
             R.id.action_finish -> {
@@ -259,6 +261,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private fun showAbout() {
 
+    }
+
+    private fun runSettingActivity() {
+        val intent = Intent(this, SettingsActivity::class.java)
+        startActivity(intent)
     }
 
     //== TESTING ==
