@@ -82,12 +82,17 @@ class CoWorkerTest {
     }
 
     @Test
-    fun testAsyncStart() {
-        coWorker.testAsyncStart()
+    fun testLazyStart() {
+        coWorker.testLazyStart()
     }
 
     @Test
     fun testAsyncWithoutRunBlocking() {
         coWorker.testAsyncWithoutRunBlocking()
+    }
+
+    @Test
+    fun testDispatcher() {
+        coWorker.testDispatcher()
     }
 }

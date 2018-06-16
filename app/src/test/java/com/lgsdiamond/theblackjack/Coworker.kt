@@ -1,5 +1,6 @@
 package com.lgsdiamond.theblackjack
 
+import android.os.Looper
 import kotlinx.coroutines.experimental.*
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.concurrent.thread
@@ -240,7 +241,7 @@ class CoWorker {
         println("Completed in $time ms")
     }
 
-    fun testAsyncStart() = runBlocking<Unit> {
+    fun testLazyStart() = runBlocking<Unit> {
         val time = measureTimeMillis {
             val one = async(start = CoroutineStart.LAZY) { doSomethingUsefulOne() }
             val two = async(start = CoroutineStart.LAZY) { doSomethingUsefulTwo() }
@@ -282,5 +283,28 @@ class CoWorker {
     // The result type of somethingUsefulTwoAsync is Deferred<Int>
     fun somethingUsefulTwoAsync() = async {
         doSomethingUsefulTwo()
+    }
+
+    // Dispatchers and threads
+
+    fun testDispatcher() = runBlocking<Unit> {
+        val jobs = arrayListOf<Job>()
+        jobs += launch(Unconfined) {
+            // not confined -- will work with main thread
+            println("      'Unconfined': I'm working in thread ${Thread.currentThread().name}")
+        }
+        jobs += launch(coroutineContext) {
+            // context of the parent, runBlocking coroutine
+            println("'coroutineContext': I'm working in thread ${Thread.currentThread().name}")
+        }
+        jobs += launch(CommonPool) {
+            // will get dispatched to ForkJoinPool.commonPool (or equivalent)
+            println("      'CommonPool': I'm working in thread ${Thread.currentThread().name}")
+        }
+        jobs += launch(newSingleThreadContext("MyOwnThread")) {
+            // will get its own new thread
+            println("          'newSTC': I'm working in thread ${Thread.currentThread().name}")
+        }
+        jobs.forEach { it.join() }
     }
 }

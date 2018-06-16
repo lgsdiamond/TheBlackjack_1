@@ -1,6 +1,7 @@
 package com.lgsdiamond.theblackjack
 
 import android.graphics.Typeface
+import android.os.Looper
 import android.text.Spannable
 import android.text.SpannableString
 import android.widget.Toast
@@ -10,7 +11,7 @@ import kotlin.math.floor
 
 
 /**
- * Created by LgsDi on 2018-03-10.
+ * Extensions
  */
 
 fun Float.toDollarString(): String {
@@ -50,3 +51,10 @@ fun CharSequence.spanFace(face: Typeface): CharSequence {
 
     return span
 }
+
+/**
+ * Thread
+ */
+fun Thread.isMainThread() = (Looper.myLooper() == Looper.getMainLooper())
+
+
