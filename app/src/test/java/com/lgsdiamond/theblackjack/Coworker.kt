@@ -1,6 +1,5 @@
 package com.lgsdiamond.theblackjack
 
-import android.os.Looper
 import kotlinx.coroutines.experimental.*
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.concurrent.thread
